@@ -112,6 +112,18 @@ footer{margin-top:38px;padding:22px 0 0;border-top:1px solid var(--rule);display
   </div>
 </section>
 
+<section class="current" aria-labelledby="current-mayas-bike-title">
+  <div>
+    <div class="kicker">Current intelligibility book</div>
+    <h2 id="current-mayas-bike-title">Maya's Bike</h2>
+    <p>A live reading room for the garden-shed book on completed intelligibility. The public page reads directly from the evolving Markdown manuscript in the <code>mayas-bike</code> repository.</p>
+  </div>
+  <div class="current-links">
+    <a class="primary-link" href="https://titanicparker.github.io/mayas-bike/">Open book</a>
+    <a class="source-link" href="https://github.com/TitanicParker/mayas-bike">Source</a>
+  </div>
+</section>
+
 <div class="controls" aria-label="Museum search">
   <input id="search" class="search" type="search" placeholder="Search the folded archive…" aria-label="Search archived projects">
 </div>
@@ -127,7 +139,7 @@ footer{margin-top:38px;padding:22px 0 0;border-top:1px solid var(--rule);display
 </section>
 </main>
 
-<footer><strong>TitanicParker Project Museum</strong><span>Current legal work and the Spot On reading room are foregrounded. Historical repositories remain available but visually subordinate.</span></footer>
+<footer><strong>TitanicParker Project Museum</strong><span>Current legal work, Spot On and Maya's Bike are foregrounded. Historical repositories remain available but visually subordinate.</span></footer>
 </div>
 
 <script>
@@ -243,7 +255,7 @@ const law=archived.filter(p=>p.category==='law').sort((a,b)=>{
 const byCategory={law};
 for(const c of categoryOrder.slice(1)) byCategory[c]=archived.filter(p=>p.category===c).sort((a,b)=>a.order-b.order);
 
-document.querySelector('#total').textContent=archived.length+2;
+document.querySelector('#total').textContent=archived.length+3;
 const groups=document.querySelector('#groups');
 const projectRows=[];
 const groupEls=[];
