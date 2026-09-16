@@ -25,9 +25,20 @@
     <a class="source-link" href="https://github.com/TitanicParker/Liams-case">Source</a>
   </div>
 </section>\n\n`;
-    html=html.replace('<div class="controls" aria-label="Museum search">',liam+'<div class="controls" aria-label="Museum search">');
-    html=html.replace("archived.length+3","archived.length+4");
-    html=html.replace("Current legal work, Spot On and Maya's Bike are foregrounded.","Current legal work, Spot On, Maya's Bike and Liam's Case are foregrounded.");
+    const neuropathy=`<section class="current" aria-labelledby="current-neuropathy-question-title">
+  <div>
+    <div class="kicker">Current manuscript reading room</div>
+    <h2 id="current-neuropathy-question-title">The Neuropathy Question</h2>
+    <p>A manuscript-ready reading and listening room for the neuropathy inquiry. The publication is wired directly to the evolving <code>manuscript.md</code> in the source repository.</p>
+  </div>
+  <div class="current-links">
+    <a class="primary-link" href="https://titanicparker.github.io/the-neuropathy-question/">Open reading room</a>
+    <a class="source-link" href="https://github.com/TitanicParker/the-neuropathy-question">Source</a>
+  </div>
+</section>\n\n`;
+    html=html.replace('<div class="controls" aria-label="Museum search">',liam+neuropathy+'<div class="controls" aria-label="Museum search">');
+    html=html.replace("archived.length+3","archived.length+5");
+    html=html.replace("Current legal work, Spot On and Maya's Bike are foregrounded.","Current legal work, Spot On, Maya's Bike, Liam's Case and The Neuropathy Question are foregrounded.");
     document.open();document.write(html);document.close();
   }catch(e){
     document.body.innerHTML='<div class="loading"><div><strong>Project Museum</strong><p>The collection could not be opened just now.</p></div></div>';
