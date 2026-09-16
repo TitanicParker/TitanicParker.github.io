@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Opening Liam’s Case…</title>
+<style>html,body{margin:0;min-height:100%;background:#f5f0e6;color:#201d19;font:18px/1.6 Georgia,serif}.loading{min-height:100vh;display:grid;place-items:center;text-align:center;padding:2rem}.loading strong{display:block;font-size:2rem;font-weight:500}.loading span{color:#756e64;font:600 .72rem/1.4 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-top:.6rem}</style>
+</head>
+<body>
+<div class="loading"><div><strong>Liam’s Case</strong><span>Opening the reading room…</span></div></div>
+<script>
+(async()=>{
+  try{
+    const source='https://raw.githubusercontent.com/TitanicParker/Liams-case/main/index.html';
+    const r=await fetch(source,{cache:'no-store'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    let html=await r.text();
+    html=html.replace(/<head>/i,'<head><base href="https://raw.githubusercontent.com/TitanicParker/Liams-case/main/">');
+    document.open();document.write(html);document.close();
+  }catch(e){
+    document.body.innerHTML='<div class="loading"><div><strong>Liam’s Case</strong><p>The reading room could not be opened just now.</p><p><a href="https://github.com/TitanicParker/Liams-case">Open the source repository</a></p></div></div>';
+    console.error(e);
+  }
+})();
+</script>
+</body>
+</html>
