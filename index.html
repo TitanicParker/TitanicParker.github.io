@@ -172,6 +172,18 @@ footer{margin-top:38px;padding:22px 0 0;border-top:1px solid var(--rule);display
   </div>
 </section>
 
+<section class="current" aria-labelledby="current-case-readable-title">
+  <div>
+    <div class="kicker">Current lossless case reader</div>
+    <h2 id="current-case-readable-title">Case Readable</h2>
+    <p>The full Case Formulation reading edition in a lossless public reader. The page is wired to the preserved source repository so the evidential architecture, wording, anchors, navigation and original HTML remain intact rather than being re-summarised for publication.</p>
+  </div>
+  <div class="current-links">
+    <a class="primary-link" href="https://titanicparker.github.io/case-readable/">Open case reader</a>
+    <a class="source-link" href="https://github.com/TitanicParker/case-readable">Source</a>
+  </div>
+</section>
+
 <div class="controls" aria-label="Museum search">
   <input id="search" class="search" type="search" placeholder="Search the folded archive…" aria-label="Search archived projects">
 </div>
@@ -187,7 +199,7 @@ footer{margin-top:38px;padding:22px 0 0;border-top:1px solid var(--rule);display
 </section>
 </main>
 
-<footer><strong>TitanicParker Project Museum</strong><span>Current legal work, Spot On, Maya's Bike, Liam's Case, The Neuropathy Question, The Eye of the Argument and Sequence are foregrounded. Historical repositories remain available but visually subordinate.</span></footer>
+<footer><strong>TitanicParker Project Museum</strong><span>Current legal work, Spot On, Maya's Bike, Liam's Case, The Neuropathy Question, The Eye of the Argument, Sequence and Case Readable are foregrounded. Historical repositories remain available but visually subordinate.</span></footer>
 </div>
 
 <script>
@@ -303,7 +315,7 @@ const law=archived.filter(p=>p.category==='law').sort((a,b)=>{
 const byCategory={law};
 for(const c of categoryOrder.slice(1)) byCategory[c]=archived.filter(p=>p.category===c).sort((a,b)=>a.order-b.order);
 
-document.querySelector('#total').textContent=archived.length+7;
+document.querySelector('#total').textContent=archived.length+8;
 const groups=document.querySelector('#groups');
 const projectRows=[];
 const groupEls=[];
