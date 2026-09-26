@@ -1,51 +1,127 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Definitions — Making Sense Together</title>
-<style>
-html,body{margin:0;min-height:100%;background:#f6f0e5;color:#27241f;font:18px/1.6 Georgia,serif}
-.loading{min-height:100vh;display:grid;place-items:center;text-align:center;padding:2rem}
-.loading strong{display:block;font-size:2rem;font-weight:500}
-.loading span{display:block;margin-top:.6rem;color:#716b61;font:700 .7rem/1.4 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
-.loading p{max-width:36rem}
-a{color:inherit}
-@media(prefers-color-scheme:dark){html,body{background:#171614;color:#eee9df}.loading span{color:#aaa297}}
-</style>
-</head>
+  <style>
+    :root{color-scheme:light;--paper:#f6f0e5;--paper-2:#fffdf8;--ink:#27241f;--muted:#716b61;--line:#d9d0c2;--accent:#70543c;--accent-soft:#eadfce;--shadow:0 18px 55px rgba(50,40,28,.11)}
+    html[data-theme="dark"]{color-scheme:dark;--paper:#171614;--paper-2:#201e1b;--ink:#eee9df;--muted:#aaa297;--line:#3b3732;--accent:#d5b28d;--accent-soft:#342b23;--shadow:0 18px 55px rgba(0,0,0,.28)}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Times New Roman",serif;line-height:1.55}
+    button,input,select{font:inherit;color:inherit}
+    .topbar{position:sticky;top:0;z-index:20;min-height:56px;display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(12px)}
+    .brand{min-width:0;flex:1;font:700 14px/1.2 ui-sans-serif,system-ui,sans-serif;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .toolbar{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none}.toolbar::-webkit-scrollbar{display:none}
+    .control{border:1px solid var(--line);background:var(--paper-2);border-radius:999px;min-width:36px;height:36px;padding:0 11px;cursor:pointer;font:13px ui-sans-serif,system-ui,sans-serif;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    .control:hover{border-color:var(--accent)}
+    main{max-width:1180px;margin:0 auto;padding:34px 18px 72px}
+    .panel{background:var(--paper-2);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:10px;overflow:hidden}
+    .intro{padding:24px 26px 18px;border-bottom:1px solid var(--line)}
+    h1{font-size:clamp(1.7rem,4vw,2.7rem);line-height:1.05;margin:0 0 10px;letter-spacing:-.03em}
+    .lede{margin:0;color:var(--muted);font:14px/1.5 ui-sans-serif,system-ui,sans-serif}
+    .orientation{margin:14px 0 0;padding:13px 15px;border-left:3px solid var(--accent);background:var(--accent-soft);font:13px/1.55 ui-sans-serif,system-ui,sans-serif}
+    .orientation strong{font-weight:800}
+    .orientation .triad{display:block;margin-top:6px;font-weight:700}
+    .reading-path{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-weight:700}
+    .reading-path span{color:var(--muted);font-weight:600}
+    .explore{display:inline-block;margin-top:6px;padding:2px 7px;border:1px solid var(--line);border-radius:999px;color:var(--accent);text-decoration:none;font:700 11px/1.4 ui-sans-serif,system-ui,sans-serif}
+    tr:target td{background:var(--accent-soft)}
+    .axis-map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+    .axis-card{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper-2);text-decoration:none;color:var(--ink);font:12px/1.4 ui-sans-serif,system-ui,sans-serif}
+    .axis-card strong{display:block;margin-bottom:3px}
+    @media(max-width:720px){.axis-map{grid-template-columns:1fr}}
+    .tools{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--paper)}
+    .tools input,.tools select{height:36px;border:1px solid var(--line);border-radius:7px;background:var(--paper-2);padding:0 10px;font:13px ui-sans-serif,system-ui,sans-serif}
+    .tools input{min-width:220px;flex:1}
+    .table-wrap{max-height:72vh;overflow:auto}
+    table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px;font-size:14px}
+    th,td{padding:11px 12px;text-align:left;vertical-align:top;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+    th{position:sticky;top:0;z-index:5;background:var(--paper);font:700 12px/1.3 ui-sans-serif,system-ui,sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.035em}
+    td:first-child,th:first-child{position:sticky;left:0;z-index:4;background:var(--paper-2)}
+    th:first-child{z-index:6;background:var(--paper)}
+    tr:last-child td{border-bottom:0} td:last-child,th:last-child{border-right:0}
+    .group td{background:var(--accent-soft)!important;font:700 12px/1.2 ui-sans-serif,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em}
+    .pill{display:inline-block;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:2px 8px;font:700 12px/1.4 ui-sans-serif,system-ui,sans-serif;white-space:nowrap}
+    .short{font-weight:700}.muted{color:var(--muted)} .status{padding:28px;text-align:center;color:var(--muted);font-family:ui-sans-serif,system-ui,sans-serif}
+    @media(max-width:720px){.brand{display:none}.toolbar{width:100%}main{padding:18px 8px 48px}.intro{padding:20px 16px}.toolbar{gap:4px}.control{padding:0 9px;font-size:12px}.table-wrap{max-height:76vh}}
+  
+.mobile-nav-toggle{display:none}
+@media(max-width:760px){
+  .topbar{flex-wrap:wrap}
+  .mobile-nav-toggle{display:inline-flex;margin-left:auto}
+  .topbar .toolbar{display:none;width:100%;flex-wrap:wrap;overflow:visible;padding:4px 0 2px}
+  .topbar.nav-open .toolbar{display:flex}
+  .topbar .toolbar .control{flex:0 0 auto}
+}
+</style></head>
 <body>
-<div class="loading"><div><strong>Definitions</strong><span>Opening…</span></div></div>
+<header class="topbar"><div class="brand">Making Sense Together · Definitions</div><button class="control mobile-nav-toggle" id="mobileNavToggle" aria-expanded="false" aria-controls="siteToolbar">Menu</button><div class="toolbar" id="siteToolbar">
+<a class="control" href="strongest-claim.html">Claim</a><a class="control" href="index.html">Reader</a><a class="control" href="forms.html">54 Forms</a><a class="control" href="semantic-fields.html">Semantic Field</a><a class="control" href="method.html">Method</a><button class="control" id="theme" aria-label="Toggle theme">◐</button>
+</div></header>
+<main><section class="panel">
+<div class="intro"><h1>The 15 definitions</h1><p class="lede">A lookup table for the three questions, the three dimensions, and the twelve definitions that answer them. Start with the event; use the table to decide what to notice.</p><div class="orientation"><strong>Scope.</strong> These questions concern a completed local achievement of intelligibility at the scale under discussion: something has become different, that difference has become sufficient for the live matter, and the achieved result is available in some mode for what follows.<br><br><strong>Discern the three answers independently.</strong> Knowing what changed does not tell you what made that change sufficient; neither answer tells you how the achieved result remains available. <span class="triad">What changed? → Transformation · What made it sufficient? → Completion · What remained? → Persistence</span><div class="axis-map"><a class="axis-card" href="#definition-transformation-pattern"><strong>What changed?</strong>Transformation Pattern</a><a class="axis-card" href="#definition-completion-topology"><strong>What made it sufficient?</strong>Completion Topology</a><a class="axis-card" href="#definition-persistence-mode"><strong>What remained?</strong>Persistence Mode</a></div><div class="reading-path">Reading path: <span>event → three questions → definition → coordinate → manuscript cases</span></div></div></div>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>Question</th><th>Axis / definition</th><th>Canonical definition</th><th>Look for</th><th>Plain check</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="status" id="status">Loading the canonical ledger…</div>
+</section></main>
 <script>
-(async()=>{
-  const rawRoot='https://raw.githubusercontent.com/TitanicParker/making-sense--together/main/';
-  try{
-    const r=await fetch(rawRoot+'definitions.html',{cache:'no-store'});
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    let html=await r.text();
-
-    const fetchBridge=`<script>
 (function(){
-  const RAW='https://raw.githubusercontent.com/TitanicParker/making-sense--together/main/';
-  const nativeFetch=window.fetch.bind(window);
-  window.fetch=function(input,init){
-    if(typeof input==='string' && !/^[a-z][a-z0-9+.-]*:/i.test(input) && !input.startsWith('//') && !input.startsWith('/')){
-      input=RAW+input.replace(/^\\.\\//,'');
-    }
-    return nativeFetch(input,init);
-  };
-})();
-<\\/script>`;
-
-    html=html.replace(/<head>/i,'<head>'+fetchBridge);
-    document.open();
-    document.write(html);
-    document.close();
-  }catch(e){
-    document.body.innerHTML='<div class="loading"><div><strong>Definitions</strong><p>This page could not be opened just now.</p><p><a href="https://github.com/TitanicParker/making-sense--together">Open the source repository</a></p></div></div>';
-    console.error(e);
-  }
+var cues={
+"Transformation Pattern":["The kind of unresolvedness decisively altered.","What changed?"],
+"Completion Topology":["The structural shape by which the change became sufficient.","Why was that enough?"],
+"Persistence Mode":["The mode in which the achieved result remains available.","What remained?"],
+"Differentiation":["A difference becomes determinate enough to matter.","What can now be told apart?"],
+"Opening":["Availability, access, reach, continuation or possibility increases.","What can now happen?"],
+"Relating":["A bearing, dependency, order, correspondence or reciprocity becomes constitutive.","What now has to be understood through what?"],
+"Repair":["Something failing by an operative criterion is redirected or put right.","What failure was corrected?"],
+"Integration":["Parts acquire roles by being organized into a whole.","What now stands or works together?"],
+"Settlement":["A live demand for further uptake, choice or completion is discharged.","What no longer needs answering or completing?"],
+"Focal":["Sufficiency gathers around a privileged locus.","What was decisive?"],
+"Distributed":["A plurality, span, sequence or system belongs to what makes it enough.","What had to work together?"],
+"Release":["Sufficiency occurs because something that governed the opening field no longer governs it. Release names the shape of enoughness, not the kind of change itself.","What lost its governing claim?"],
+"Standing":["The achieved determination itself remains available.","What is now established?"],
+"Bearing":["The result remains through a constitutive relation or condition.","What still holds through what?"],
+"Efficacy":["The result remains as capacity, rule, effect or changed continuation.","What can now happen because of this?"]
+};
+var q=function(n){if(n<=9)return "What changed?";if(n<=12)return "What made it sufficient?";return "What remained?";}
+function slugify(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+function exploreHref(x){
+  if(x.n>=4&&x.n<=9)return "forms.html?t="+encodeURIComponent(x.name);
+  if(x.n>=10&&x.n<=12)return "forms.html?c="+encodeURIComponent(x.name);
+  if(x.n>=13&&x.n<=15)return "forms.html?p="+encodeURIComponent(x.name);
+  return "forms.html";
+}
+fetch("working_54_canonical_forms_with_chapter_placeholders.md",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Could not load ledger");return r.text()}).then(function(md){
+var re=/\*\*(\d+)\. ([^*]+)\*\*\s*\n\s*([^\n]+(?:\n(?!\s*\*\*\d+\.)[^\n]+)*)/g,m,items=[];
+while((m=re.exec(md))&&items.length<15){items.push({n:+m[1],name:m[2].trim(),def:m[3].trim().replace(/\n+/g," ")})}
+var tbody=document.getElementById("rows"), last="";
+items.forEach(function(x){
+var family=x.n<=9?"Transformation":x.n<=12?"Completion":"Persistence";
+if(family!==last){var gr=document.createElement("tr");gr.className="group";gr.innerHTML="<td colspan='6'>"+family+"</td>";tbody.appendChild(gr);last=family}
+var c=cues[x.name]||["",""];
+var tr=document.createElement("tr");
+tr.id="definition-"+slugify(x.name);
+tr.innerHTML="<td>"+x.n+"</td><td>"+q(x.n)+"</td><td><strong>"+x.name+"</strong><br><a class='explore' href='"+exploreHref(x)+"'>Explore forms</a></td><td>"+x.def+"</td><td>"+c[0]+"</td><td><em>"+c[1]+"</em></td>";
+tbody.appendChild(tr)
+});
+document.getElementById("status").hidden=true;
+}).catch(function(e){document.getElementById("status").textContent=e.message});
+var saved=localStorage.getItem("reader-theme");if(saved==="dark")document.documentElement.dataset.theme="dark";
+document.getElementById("theme").onclick=function(){var d=document.documentElement.dataset.theme==="dark";document.documentElement.dataset.theme=d?"":"dark";localStorage.setItem("reader-theme",d?"light":"dark")};
 })();
 </script>
-</body>
-</html>
+<script>
+(function(){
+  var topbar=document.querySelector('.topbar');
+  var toggle=document.getElementById('mobileNavToggle');
+  if(!topbar||!toggle)return;
+  function closeMenu(){
+    topbar.classList.remove('nav-open');
+    toggle.setAttribute('aria-expanded','false');
+    toggle.textContent='Menu';
+  }
+  toggle.addEventListener('click',function(){
+    var open=topbar.classList.toggle('nav-open');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.textContent=open?'Close':'Menu';
+  });
+  window.addEventListener('resize',function(){if(window.innerWidth>760)closeMenu()});
+})();
+</script>
+</body></html>
