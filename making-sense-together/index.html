@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A quiet reading view for https://titanicparker.github.io/making-sense-together/manuscript.md">
+  <meta name="description" content="A quiet reading view for manuscript.md">
   <title>Making Sense Together</title>
 
   <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
@@ -523,6 +523,81 @@
   .topbar.nav-open .toolbar{display:flex}
   .topbar .toolbar .control{flex:0 0 auto}
 }
+
+/* Minimal reading chrome */
+@media(max-width:760px){
+  body{background:var(--paper-2)}
+  .topbar{
+    position:fixed;top:8px;left:8px;right:8px;min-height:32px;
+    padding:0;border:0;background:transparent;backdrop-filter:none;
+    justify-content:flex-end;pointer-events:none;
+  }
+  .mobile-nav-toggle{
+    pointer-events:auto;display:inline-flex!important;
+    width:34px;min-width:34px;height:28px;padding:0;
+    border:0;background:transparent;border-radius:0;
+    color:var(--accent);font-size:0;
+  }
+  .mobile-nav-toggle::after{content:"—";font:700 22px/1 Georgia,serif}
+  .topbar.nav-open{
+    background:color-mix(in srgb,var(--paper-2) 96%,transparent);
+    padding:8px;box-shadow:0 8px 30px rgba(0,0,0,.18);
+    pointer-events:auto;
+  }
+  .topbar.nav-open .mobile-nav-toggle::after{content:"×";font-size:24px}
+  .topbar .toolbar{display:none}
+  .topbar.nav-open .toolbar{
+    display:flex;width:100%;justify-content:center;gap:4px;
+    padding:4px 0 0;flex-wrap:wrap;
+  }
+  .topbar .toolbar .control{
+    width:auto;min-width:28px;height:28px;padding:0 7px;
+    border:0;background:transparent;border-radius:0;
+    color:var(--accent);font-size:11px;
+  }
+  .chapter-tabs-wrap{
+    position:fixed;top:8px;left:50%;transform:translateX(-50%);
+    width:min(72vw,420px);z-index:34;border:0;background:transparent;
+    backdrop-filter:none;opacity:.48;
+  }
+  .chapter-tabs{gap:5px;padding:0;justify-content:flex-start}
+  .chapter-tab{
+    width:12px;height:24px;border:0;border-radius:0;background:transparent!important;
+    box-shadow:none;font-size:0;outline:0!important;
+  }
+  .chapter-tab::after{
+    content:"";display:block;width:10px;height:1px;background:var(--accent);
+  }
+  .chapter-tab.active{opacity:1;transform:none;box-shadow:none}
+  .chapter-tab.active::after{height:2px;width:14px}
+  main{padding:18px 0 64px}
+  .book{
+    max-width:none;width:100%;padding:34px 7vw 56px;
+    border:0;border-radius:0;box-shadow:none;background:var(--paper-2);
+  }
+  .chapter{
+    margin:0;padding:20px 0 28px;border:0;border-radius:0;
+    background:transparent!important;
+  }
+  .framing-section{background:transparent!important}
+  .system-drawer{
+    left:50%;right:auto;bottom:8px;transform:translateX(-50%);
+    width:auto;min-width:0;border:0;border-radius:0;background:transparent;
+    box-shadow:none;overflow:visible;
+  }
+  .system-toggle{
+    width:auto;min-width:130px;padding:5px 10px;gap:10px;
+    border:0;background:color-mix(in srgb,var(--paper-2) 88%,transparent);
+    color:var(--accent);font-size:11px;font-weight:700;
+  }
+  .system-toggle span:first-child::before,.system-toggle span:first-child::after{content:" — "}
+  .system-body{
+    position:absolute;left:50%;bottom:34px;transform:translateX(-50%);
+    width:min(88vw,340px);padding:12px;border:1px solid var(--line);
+    border-radius:10px;background:var(--paper-2);box-shadow:var(--shadow);
+  }
+  .progress{height:1px;opacity:.5}
+}
 </style>
 </head>
 <body>
@@ -532,11 +607,11 @@
   <header class="topbar">
     <div class="brand" id="brand">Making Sense Together</div>
     <button class="control mobile-nav-toggle" id="mobileNavToggle" aria-expanded="false" aria-controls="siteToolbar">Menu</button><div class="toolbar" id="siteToolbar">
-      <a class="control nav-pill" href="https://titanicparker.github.io/making-sense-together/https://titanicparker.github.io/making-sense-together/strongest-claim.html" aria-label="Read The Strongest Claim">Claim</a>
-      <a class="control nav-pill" href="https://titanicparker.github.io/making-sense-together/https://titanicparker.github.io/making-sense-together/definitions.html" aria-label="Open definitions">Definitions</a>
-      <a class="control nav-pill" href="https://titanicparker.github.io/making-sense-together/https://titanicparker.github.io/making-sense-together/forms.html" aria-label="Open 54 canonical forms">54 Forms</a>
-      <a class="control nav-pill" href="https://titanicparker.github.io/making-sense-together/https://titanicparker.github.io/making-sense-together/semantic-fields.html" aria-label="Open semantic field">Semantic Field</a>
-      <a class="control nav-pill" href="https://titanicparker.github.io/making-sense-together/https://titanicparker.github.io/making-sense-together/method.html" aria-label="Open method and technical notes">Method</a>
+      <a class="control nav-pill" href="./strongest-claim.html" aria-label="Read The Strongest Claim">Claim</a>
+      <a class="control nav-pill" href="./definitions.html" aria-label="Open definitions">Definitions</a>
+      <a class="control nav-pill" href="./forms.html" aria-label="Open 54 canonical forms">54 Forms</a>
+      <a class="control nav-pill" href="./semantic-fields.html" aria-label="Open semantic field">Semantic Field</a>
+      <a class="control nav-pill" href="./method.html" aria-label="Open method and technical notes">Method</a>
       <button class="control" id="practice" aria-pressed="false" aria-label="Toggle practice mode">Practice</button>
       <button class="control" id="smaller" aria-label="Smaller text">A−</button>
       <button class="control" id="larger" aria-label="Larger text">A+</button>
@@ -562,17 +637,17 @@
     </button>
     <div class="system-body" id="systemBody" hidden>
       <div class="system-triad">
-        <a href="https://titanicparker.github.io/making-sense-together/definitions.html#definition-transformation-pattern"><strong>What changed?</strong>Transformation Pattern</a>
-        <a href="https://titanicparker.github.io/making-sense-together/definitions.html#definition-completion-topology"><strong>What made it sufficient?</strong>Completion Topology</a>
-        <a href="https://titanicparker.github.io/making-sense-together/definitions.html#definition-persistence-mode"><strong>What remained?</strong>Persistence Mode</a>
+        <a href="definitions.html#definition-transformation-pattern"><strong>What changed?</strong>Transformation Pattern</a>
+        <a href="definitions.html#definition-completion-topology"><strong>What made it sufficient?</strong>Completion Topology</a>
+        <a href="definitions.html#definition-persistence-mode"><strong>What remained?</strong>Persistence Mode</a>
       </div>
       <div>The 54 forms are the full field generated by crossing the presently distinguished answers on those three axes.</div>
       <div class="system-links" style="margin-top:10px">
-        <a href="https://titanicparker.github.io/making-sense-together/strongest-claim.html">strongest claim</a>
-        <a href="https://titanicparker.github.io/making-sense-together/definitions.html">15 definitions</a>
-        <a href="https://titanicparker.github.io/making-sense-together/forms.html">54 forms</a>
-        <a href="https://titanicparker.github.io/making-sense-together/semantic-fields.html">semantic field</a>
-        <a href="https://titanicparker.github.io/making-sense-together/method.html">method</a>
+        <a href="strongest-claim.html">strongest claim</a>
+        <a href="definitions.html">15 definitions</a>
+        <a href="forms.html">54 forms</a>
+        <a href="semantic-fields.html">semantic field</a>
+        <a href="method.html">method</a>
       </div>
     </div>
   </aside>
@@ -580,10 +655,10 @@
   <script>
     (function () {
       var params = new URLSearchParams(location.search);
-      var requested = params.get("file") || "https://titanicparker.github.io/making-sense-together/manuscript.md";
+      var requested = params.get("file") || "manuscript.md";
       var safeFile = /^[A-Za-z0-9._/-]+\.md$/i.test(requested) && requested.indexOf("..") === -1
         ? requested
-        : "https://titanicparker.github.io/making-sense-together/manuscript.md";
+        : "manuscript.md";
 
       var book = document.getElementById("book");
       var status = document.getElementById("status");
@@ -680,7 +755,7 @@
             strong.classList.add("answer-key");
             var a = document.createElement("a");
             a.className = "form-link";
-            a.href = "https://titanicparker.github.io/making-sense-together/forms.html?form=" + match[1];
+            a.href = "forms.html?form=" + match[1];
             a.textContent = "Form #" + match[1];
             a.setAttribute("aria-label", "Open canonical form " + match[1]);
             strong.insertAdjacentElement("afterend", a);
@@ -807,7 +882,7 @@
         .catch(function (error) {
           status.innerHTML =
             "<strong>The reader is ready, but no manuscript could be opened.</strong><br><br>" +
-            "Create <code>https://titanicparker.github.io/making-sense-together/manuscript.md</code> in this repository, then reload the page.<br><br>" +
+            "Create <code>manuscript.md</code> in this repository, then reload the page.<br><br>" +
             "<small>" + String(error.message).replace(/[<>]/g, "") + "</small>";
         });
 
