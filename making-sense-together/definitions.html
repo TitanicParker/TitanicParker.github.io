@@ -53,7 +53,7 @@
 </style></head>
 <body>
 <header class="topbar"><div class="brand">Making Sense Together · Definitions</div><button class="control mobile-nav-toggle" id="mobileNavToggle" aria-expanded="false" aria-controls="siteToolbar">Menu</button><div class="toolbar" id="siteToolbar">
-<a class="control" href="strongest-claim.html">Claim</a><a class="control" href="index.html">Reader</a><a class="control" href="forms.html">54 Forms</a><a class="control" href="semantic-fields.html">Semantic Field</a><a class="control" href="method.html">Method</a><button class="control" id="theme" aria-label="Toggle theme">◐</button>
+<a class="control" href="https://titanicparker.github.io/making-sense-together/strongest-claim.html">Claim</a><a class="control" href="https://titanicparker.github.io/making-sense-together/index.html">Reader</a><a class="control" href="https://titanicparker.github.io/making-sense-together/forms.html">54 Forms</a><a class="control" href="https://titanicparker.github.io/making-sense-together/semantic-fields.html">Semantic Field</a><a class="control" href="https://titanicparker.github.io/making-sense-together/method.html">Method</a><button class="control" id="theme" aria-label="Toggle theme">◐</button>
 </div></header>
 <main><section class="panel">
 <div class="intro"><h1>The 15 definitions</h1><p class="lede">A lookup table for the three questions, the three dimensions, and the twelve definitions that answer them. Start with the event; use the table to decide what to notice.</p><div class="orientation"><strong>Scope.</strong> These questions concern a completed local achievement of intelligibility at the scale under discussion: something has become different, that difference has become sufficient for the live matter, and the achieved result is available in some mode for what follows.<br><br><strong>Discern the three answers independently.</strong> Knowing what changed does not tell you what made that change sufficient; neither answer tells you how the achieved result remains available. <span class="triad">What changed? → Transformation · What made it sufficient? → Completion · What remained? → Persistence</span><div class="axis-map"><a class="axis-card" href="#definition-transformation-pattern"><strong>What changed?</strong>Transformation Pattern</a><a class="axis-card" href="#definition-completion-topology"><strong>What made it sufficient?</strong>Completion Topology</a><a class="axis-card" href="#definition-persistence-mode"><strong>What remained?</strong>Persistence Mode</a></div><div class="reading-path">Reading path: <span>event → three questions → definition → coordinate → manuscript cases</span></div></div></div>
@@ -82,12 +82,12 @@ var cues={
 var q=function(n){if(n<=9)return "What changed?";if(n<=12)return "What made it sufficient?";return "What remained?";}
 function slugify(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
 function exploreHref(x){
-  if(x.n>=4&&x.n<=9)return "forms.html?t="+encodeURIComponent(x.name);
-  if(x.n>=10&&x.n<=12)return "forms.html?c="+encodeURIComponent(x.name);
-  if(x.n>=13&&x.n<=15)return "forms.html?p="+encodeURIComponent(x.name);
-  return "forms.html";
+  if(x.n>=4&&x.n<=9)return "https://titanicparker.github.io/making-sense-together/forms.html?t="+encodeURIComponent(x.name);
+  if(x.n>=10&&x.n<=12)return "https://titanicparker.github.io/making-sense-together/forms.html?c="+encodeURIComponent(x.name);
+  if(x.n>=13&&x.n<=15)return "https://titanicparker.github.io/making-sense-together/forms.html?p="+encodeURIComponent(x.name);
+  return "https://titanicparker.github.io/making-sense-together/forms.html";
 }
-fetch("working_54_canonical_forms_with_chapter_placeholders.md",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Could not load ledger");return r.text()}).then(function(md){
+fetch("https://titanicparker.github.io/making-sense-together/working_54_canonical_forms_with_chapter_placeholders.md",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Could not load ledger");return r.text()}).then(function(md){
 var re=/\*\*(\d+)\. ([^*]+)\*\*\s*\n\s*([^\n]+(?:\n(?!\s*\*\*\d+\.)[^\n]+)*)/g,m,items=[];
 while((m=re.exec(md))&&items.length<15){items.push({n:+m[1],name:m[2].trim(),def:m[3].trim().replace(/\n+/g," ")})}
 var tbody=document.getElementById("rows"), last="";
