@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Definitions — Making Sense Together</title>
+<style>
+html,body{margin:0;min-height:100%;background:#f6f0e5;color:#27241f;font:18px/1.6 Georgia,serif}
+.loading{min-height:100vh;display:grid;place-items:center;text-align:center;padding:2rem}
+.loading strong{display:block;font-size:2rem;font-weight:500}
+.loading span{display:block;margin-top:.6rem;color:#716b61;font:700 .7rem/1.4 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+.loading p{max-width:36rem}
+a{color:inherit}
+@media(prefers-color-scheme:dark){html,body{background:#171614;color:#eee9df}.loading span{color:#aaa297}}
+</style>
+</head>
+<body>
+<div class="loading"><div><strong>Definitions</strong><span>Opening…</span></div></div>
+<script>
+(async()=>{
+  const rawRoot='https://raw.githubusercontent.com/TitanicParker/making-sense--together/main/';
+  try{
+    const r=await fetch(rawRoot+'definitions.html',{cache:'no-store'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    let html=await r.text();
+
+    const fetchBridge=`<script>
+(function(){
+  const RAW='https://raw.githubusercontent.com/TitanicParker/making-sense--together/main/';
+  const nativeFetch=window.fetch.bind(window);
+  window.fetch=function(input,init){
+    if(typeof input==='string' && !/^[a-z][a-z0-9+.-]*:/i.test(input) && !input.startsWith('//') && !input.startsWith('/')){
+      input=RAW+input.replace(/^\\.\\//,'');
+    }
+    return nativeFetch(input,init);
+  };
+})();
+<\\/script>`;
+
+    html=html.replace(/<head>/i,'<head>'+fetchBridge);
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(e){
+    document.body.innerHTML='<div class="loading"><div><strong>Definitions</strong><p>This page could not be opened just now.</p><p><a href="https://github.com/TitanicParker/making-sense--together">Open the source repository</a></p></div></div>';
+    console.error(e);
+  }
+})();
+</script>
+</body>
+</html>
