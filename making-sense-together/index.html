@@ -1,50 +1,876 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Making Sense Together</title>
-<style>
-html,body{margin:0;min-height:100%;background:#f6f0e5;color:#27241f;font:18px/1.6 Georgia,serif}
-.loading{min-height:100vh;display:grid;place-items:center;text-align:center;padding:2rem}
-.loading strong{display:block;font-size:2rem;font-weight:500}
-.loading span{display:block;margin-top:.6rem;color:#716b61;font:700 .7rem/1.4 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
-.loading p{max-width:36rem}
-a{color:inherit}
-@media(prefers-color-scheme:dark){html,body{background:#171614;color:#eee9df}.loading span{color:#aaa297}}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A quiet reading view for manuscript.md">
+  <title>Making Sense Together</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f6f0e5;
+      --paper-2: #fffdf8;
+      --ink: #27241f;
+      --muted: #716b61;
+      --line: #d9d0c2;
+      --accent: #70543c;
+      --accent-soft: #eadfce;
+      --shadow: 0 18px 55px rgba(50, 40, 28, .11);
+      --reader-size: 19px;
+      --measure: 720px;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --paper: #171614;
+      --paper-2: #201e1b;
+      --ink: #eee9df;
+      --muted: #aaa297;
+      --line: #3b3732;
+      --accent: #d5b28d;
+      --accent-soft: #342b23;
+      --shadow: 0 18px 55px rgba(0, 0, 0, .28);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.72;
+    }
+
+    button, select {
+      font: inherit;
+      color: inherit;
+    }
+
+    .progress {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 3px;
+      z-index: 50;
+      background: transparent;
+    }
+
+    .progress > div {
+      height: 100%;
+      width: 0;
+      background: var(--accent);
+      transition: width .08s linear;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 92%, transparent);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      min-width: 0;
+      flex: 1;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .toolbar::-webkit-scrollbar { display: none; }
+
+    .control {
+      border: 1px solid var(--line);
+      background: var(--paper-2);
+      border-radius: 999px;
+      min-width: 36px;
+      height: 36px;
+      padding: 0 11px;
+      cursor: pointer;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+    }
+
+    .control:hover { border-color: var(--accent); }
+
+    .nav-pill {
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .chapter-tabs-wrap {
+      position: sticky;
+      top: 56px;
+      z-index: 35;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 94%, transparent);
+      backdrop-filter: blur(12px);
+    }
+
+    .chapter-tabs {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 10px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .chapter-tabs::-webkit-scrollbar { display: none; }
+
+    .chapter-tab {
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--tab-rule, var(--line));
+      background: var(--tab-bg, var(--paper-2));
+      display: grid;
+      place-items: center;
+      text-decoration: none;
+      color: var(--ink);
+      padding: 0;
+      cursor: pointer;
+      font: 700 11px/1 ui-sans-serif, system-ui, sans-serif;
+      box-shadow: 0 3px 10px rgba(50,40,28,.06);
+      transition: transform .15s ease, box-shadow .15s ease, outline-color .15s ease;
+    }
+
+    .chapter-tab:hover { transform: translateY(-1px); }
+
+    .chapter-tab.active {
+      outline: 2px solid var(--ink);
+      outline-offset: 3px;
+      box-shadow: 0 4px 14px rgba(50,40,28,.13);
+    }
+
+    .chapter-tab {
+      --tab-hue: 30;
+      background: hsl(var(--tab-hue) 58% 89%);
+      border-color: hsl(var(--tab-hue) 35% 72%);
+    }
+
+    html[data-theme="dark"] .chapter-tab {
+      background: hsl(var(--tab-hue) 28% 22%);
+      border-color: hsl(var(--tab-hue) 30% 40%);
+    }
+
+    .layout {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    main {
+      min-width: 0;
+      padding: 44px 7vw 96px;
+    }
+
+    .book {
+      max-width: var(--measure);
+      margin: 0 auto;
+      padding: 48px 54px 72px;
+      background: var(--paper-2);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      font-size: var(--reader-size);
+    }
+
+    .chapter {
+      margin: 2.2em -22px;
+      padding: 28px 22px 34px;
+      scroll-margin-top: 118px;
+      border: 1px solid transparent;
+      border-radius: 18px;
+      background: var(--chapter-bg);
+      transition: background .25s ease, border-color .25s ease;
+    }
+
+    .chapter:first-of-type { margin-top: 2.6em; }
+
+    .framing-section {
+      background: color-mix(in srgb, var(--paper-2) 80%, var(--accent-soft));
+      border-style: dashed;
+    }
+
+    .chapter > h2:first-child {
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    .chapter {
+      --chapter-hue: 30;
+      background: hsl(var(--chapter-hue) 55% 92%);
+      border-color: hsl(var(--chapter-hue) 34% 76%);
+    }
+
+    html[data-theme="dark"] .chapter {
+      background: hsl(var(--chapter-hue) 26% 18%);
+      border-color: hsl(var(--chapter-hue) 30% 36%);
+    }
+
+    article > h1:first-child {
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      line-height: .98;
+      letter-spacing: -.045em;
+      margin: .1em 0 .35em;
+      text-wrap: balance;
+    }
+
+    h1, h2, h3, h4 {
+      line-height: 1.15;
+      scroll-margin-top: 82px;
+      text-wrap: balance;
+    }
+
+    h2 {
+      margin: 3.2em 0 .8em;
+      padding-top: .35em;
+      font-size: 1.75em;
+      letter-spacing: -.02em;
+    }
+
+    h3 {
+      margin: 2.2em 0 .6em;
+      font-size: 1.25em;
+    }
+
+    .technical-section {
+      margin: 2.4em -4px 0;
+      padding: 18px 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--paper-2) 72%, var(--accent-soft));
+    }
+
+    .technical-section + .technical-section {
+      margin-top: 14px;
+    }
+
+    .technical-section h3 {
+      margin: 0 0 .9em;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 1rem;
+      letter-spacing: .02em;
+    }
+
+    .technical-section p,
+    .technical-section ol {
+      font-size: .92em;
+    }
+
+    .technical-section ol {
+      padding-left: 1.35em;
+    }
+
+    .technical-section li {
+      margin: .8em 0;
+    }
+
+    .technical-label {
+      display: inline-block;
+      margin-left: 8px;
+      color: var(--muted);
+      font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .form-link {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--accent);
+      text-decoration: none;
+      font: 700 11px/1.4 ui-sans-serif, system-ui, sans-serif;
+      vertical-align: middle;
+    }
+
+    .form-link:hover { border-color: var(--accent); }
+
+    body.practice-mode .answer-key {
+      color: transparent !important;
+      background: var(--accent-soft);
+      border-radius: 4px;
+      user-select: none;
+      text-shadow: none;
+    }
+
+    body.practice-mode .answer-key::selection { background: var(--accent-soft); }
+    body.practice-mode .form-link { display: none; }
+    body.practice-mode .coda-gloss { display: none; }
+
+    .practice-note {
+      display: none;
+      margin: 0 0 10px;
+      padding: 8px 10px;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      font: 12px/1.45 ui-sans-serif, system-ui, sans-serif;
+    }
+
+    body.practice-mode .questions-section .practice-note { display: block; }
+
+    .system-drawer {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 45;
+      width: min(360px, calc(100vw - 24px));
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--paper-2);
+      box-shadow: var(--shadow);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    .system-toggle {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .system-body {
+      padding: 0 14px 14px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .system-body[hidden] { display: none; }
+
+    .system-triad {
+      display: grid;
+      gap: 7px;
+      margin: 8px 0 10px;
+    }
+
+    .system-triad a {
+      display: block;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .system-triad strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--muted);
+    }
+
+    .system-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .system-links a {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      text-decoration: none;
+      color: var(--accent);
+      background: var(--paper);
+      font-weight: 700;
+    }
+
+    p { margin: 1.05em 0; }
+
+    blockquote {
+      margin: 1.7em 0;
+      padding: .2em 0 .2em 1.25em;
+      border-left: 3px solid var(--accent);
+      color: var(--muted);
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid var(--line);
+      margin: 3em 0;
+    }
+
+    a { color: var(--accent); }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .86em;
+      background: var(--accent-soft);
+      padding: .12em .3em;
+      border-radius: 4px;
+    }
+
+    pre {
+      overflow: auto;
+      padding: 1em;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+
+    pre code { background: transparent; padding: 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      display: block;
+      overflow-x: auto;
+      margin: 1.6em 0;
+      font-size: .9em;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: .55em .75em;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    img { max-width: 100%; height: auto; }
+
+    .status {
+      max-width: var(--measure);
+      margin: 16vh auto 0;
+      padding: 28px;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 860px) {
+      .brand { display:none; }
+      .toolbar { width:100%; }
+      main { padding: 24px 10px 70px; }
+      .book { padding: 32px 22px 50px; border-radius: 0; }
+      .chapter {
+        margin: 1.7em -10px;
+        padding: 24px 15px 28px;
+        border-radius: 14px;
+      }
+      .chapter-tabs {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .chapter-tab {
+        width: 32px;
+        height: 32px;
+        font-size: 10px;
+      }
+    }
+
+    @media print {
+      .topbar, .chapter-tabs-wrap, .progress { display: none !important; }
+      .layout { display: block; }
+      main { padding: 0; }
+      .book {
+        max-width: none;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+      }
+    }
+  
+.mobile-nav-toggle{display:none}
+@media(max-width:760px){
+  .topbar{flex-wrap:wrap}
+  .mobile-nav-toggle{display:inline-flex;margin-left:auto}
+  .topbar .toolbar{display:none;width:100%;flex-wrap:wrap;overflow:visible;padding:4px 0 2px}
+  .topbar.nav-open .toolbar{display:flex}
+  .topbar .toolbar .control{flex:0 0 auto}
+}
 </style>
 </head>
 <body>
-<div class="loading"><div><strong>Making Sense Together</strong><span>Opening…</span></div></div>
+  <!-- toolbar-nav-version: 2 -->
+  <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
+
+  <header class="topbar">
+    <div class="brand" id="brand">Making Sense Together</div>
+    <button class="control mobile-nav-toggle" id="mobileNavToggle" aria-expanded="false" aria-controls="siteToolbar">Menu</button><div class="toolbar" id="siteToolbar">
+      <a class="control nav-pill" href="./strongest-claim.html" aria-label="Read The Strongest Claim">Claim</a>
+      <a class="control nav-pill" href="./definitions.html" aria-label="Open definitions">Definitions</a>
+      <a class="control nav-pill" href="./forms.html" aria-label="Open 54 canonical forms">54 Forms</a>
+      <a class="control nav-pill" href="./semantic-fields.html" aria-label="Open semantic field">Semantic Field</a>
+      <a class="control nav-pill" href="./method.html" aria-label="Open method and technical notes">Method</a>
+      <button class="control" id="practice" aria-pressed="false" aria-label="Toggle practice mode">Practice</button>
+      <button class="control" id="smaller" aria-label="Smaller text">A−</button>
+      <button class="control" id="larger" aria-label="Larger text">A+</button>
+      <button class="control" id="width" aria-label="Toggle reading width">↔</button>
+      <button class="control" id="theme" aria-label="Toggle theme">◐</button>
+    </div>
+  </header>
+
+  <div class="chapter-tabs-wrap">
+    <nav class="chapter-tabs" id="chapterTabs" aria-label="Chapter tabs"></nav>
+  </div>
+
+  <div class="layout">
+    <main>
+      <div class="status" id="status">Opening the manuscript…</div>
+      <article class="book" id="book" hidden></article>
+    </main>
+  </div>
+
+  <aside class="system-drawer" aria-label="System guide">
+    <button class="system-toggle" id="systemToggle" aria-expanded="false">
+      <span>Three questions</span><span>+</span>
+    </button>
+    <div class="system-body" id="systemBody" hidden>
+      <div class="system-triad">
+        <a href="definitions.html#definition-transformation-pattern"><strong>What changed?</strong>Transformation Pattern</a>
+        <a href="definitions.html#definition-completion-topology"><strong>What made it sufficient?</strong>Completion Topology</a>
+        <a href="definitions.html#definition-persistence-mode"><strong>What remained?</strong>Persistence Mode</a>
+      </div>
+      <div>The 54 forms are the full field generated by crossing the presently distinguished answers on those three axes.</div>
+      <div class="system-links" style="margin-top:10px">
+        <a href="strongest-claim.html">strongest claim</a>
+        <a href="definitions.html">15 definitions</a>
+        <a href="forms.html">54 forms</a>
+        <a href="semantic-fields.html">semantic field</a>
+        <a href="method.html">method</a>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var requested = params.get("file") || "manuscript.md";
+      var safeFile = /^[A-Za-z0-9._/-]+\.md$/i.test(requested) && requested.indexOf("..") === -1
+        ? requested
+        : "manuscript.md";
+
+      var book = document.getElementById("book");
+      var status = document.getElementById("status");
+      var chapterTabs = document.getElementById("chapterTabs");
+      var brand = document.getElementById("brand");
+      var progressBar = document.getElementById("progressBar");
+      var sections = [];
+      var currentSection = 0;
+
+      function slugify(text) {
+        return text.toLowerCase()
+          .replace(/<[^>]*>/g, "")
+          .replace(/[^a-z0-9\s-]/g, "")
+          .trim()
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-") || "section";
+      }
+
+      function makeUniqueIds() {
+        var seen = {};
+        book.querySelectorAll("h1,h2,h3").forEach(function (heading) {
+          var base = slugify(heading.textContent);
+          var id = base;
+          var n = 2;
+          while (seen[id]) {
+            id = base + "-" + n;
+            n += 1;
+          }
+          seen[id] = true;
+          heading.id = id;
+        });
+      }
+
+      function wrapChapters() {
+        var headings = Array.from(book.querySelectorAll("h2"));
+        var mainNumber = 0;
+        headings.forEach(function (heading, index) {
+          var chapter = document.createElement("section");
+          var title = heading.textContent.trim();
+          var label;
+          if (/^Chapter Zero\b/.test(title)) {
+            label = "0";
+            chapter.className = "chapter framing-section";
+          } else if (/^Afterword\b/.test(title)) {
+            label = "A";
+            chapter.className = "chapter framing-section";
+          } else {
+            mainNumber += 1;
+            label = String(mainNumber);
+            chapter.className = "chapter";
+          }
+          var hue = (index * 137.508 + 18) % 360;
+
+          chapter.dataset.chapter = label;
+          chapter.id = heading.id + "-chapter";
+          chapter.style.setProperty("--chapter-hue", hue.toFixed(1));
+
+          heading.parentNode.insertBefore(chapter, heading);
+          var node = heading;
+          while (node && (node === heading || node.tagName !== "H2")) {
+            var next = node.nextSibling;
+            chapter.appendChild(node);
+            node = next;
+          }
+        });
+      }
+
+      function wrapTechnicalSections() {
+        book.querySelectorAll(".chapter").forEach(function (chapter) {
+          Array.from(chapter.querySelectorAll("h3")).forEach(function (heading) {
+            var title = heading.textContent.trim();
+            if (title !== "Three events" && title !== "Five questions") return;
+
+            var box = document.createElement("section");
+            box.className = "technical-section " + (title === "Three events" ? "coda-section" : "questions-section");
+            heading.parentNode.insertBefore(box, heading);
+
+            var node = heading;
+            while (node && (node === heading || node.tagName !== "H3")) {
+              var next = node.nextSibling;
+              box.appendChild(node);
+              node = next;
+            }
+
+            var label = document.createElement("span");
+            label.className = "technical-label";
+            label.textContent = title === "Three events" ? "coordinates" : "discernment";
+            heading.appendChild(label);
+          });
+
+          chapter.querySelectorAll(".coda-section strong").forEach(function (strong) {
+            var match = strong.textContent.match(/→ #(\d+)\s/);
+            if (!match) return;
+            strong.classList.add("answer-key");
+            var a = document.createElement("a");
+            a.className = "form-link";
+            a.href = "forms.html?form=" + match[1];
+            a.textContent = "Form #" + match[1];
+            a.setAttribute("aria-label", "Open canonical form " + match[1]);
+            strong.insertAdjacentElement("afterend", a);
+          });
+
+          var coda = chapter.querySelector(".coda-section");
+          if (coda) {
+            Array.from(coda.children).forEach(function (node) {
+              if (node.tagName === "P" && !node.querySelector("strong")) node.classList.add("coda-gloss");
+            });
+          }
+
+          var questions = chapter.querySelector(".questions-section");
+          if (questions) {
+            var note = document.createElement("div");
+            note.className = "practice-note";
+            note.textContent = "Practice mode hides printed coordinates and compact expressions. Answer from the event first, then switch Practice off to compare.";
+            questions.insertBefore(note, questions.querySelector("h3").nextSibling);
+
+            questions.querySelectorAll("strong").forEach(function (strong) {
+              var t = strong.textContent;
+              if (t.indexOf("×") > -1 || /[“”]/.test(t)) strong.classList.add("answer-key");
+            });
+          }
+        });
+      }
+
+      function buildChapterTabs() {
+        chapterTabs.innerHTML = "";
+        sections = Array.from(book.querySelectorAll(".chapter"));
+
+        sections.forEach(function (chapter, index) {
+          var heading = chapter.querySelector("h2");
+          var tab = document.createElement("button");
+          var hue = (index * 137.508 + 18) % 360;
+          var label = chapter.dataset.chapter || String(index + 1);
+          var kind = label === "0" ? "Chapter Zero" : (label === "A" ? "Afterword" : "Chapter " + label);
+          tab.className = "chapter-tab";
+          tab.type = "button";
+          tab.textContent = label;
+          tab.dataset.target = chapter.id;
+          tab.setAttribute("aria-label", kind + ": " + heading.textContent);
+          tab.title = heading.textContent;
+          tab.style.setProperty("--tab-hue", hue.toFixed(1));
+
+          tab.addEventListener("click", function () {
+            currentSection = index;
+            var top = chapter.getBoundingClientRect().top + window.pageYOffset - 118;
+            window.scrollTo({ top: top, behavior: "smooth" });
+            history.replaceState(null, "", "#" + chapter.id);
+          });
+
+          chapterTabs.appendChild(tab);
+        });
+
+        if (sections.length) {
+          updateSectionButtons();
+        }
+      }
+
+      function updateSectionButtons() {
+        if (!sections.length) return;
+        var active = 0;
+        var threshold = 132;
+
+        sections.forEach(function (section, index) {
+          if (section.getBoundingClientRect().top <= threshold) active = index;
+        });
+
+        currentSection = active;
+        document.querySelectorAll(".chapter-tab").forEach(function (a) {
+          var isActive = a.dataset.target === sections[active].id;
+          a.classList.toggle("active", isActive);
+          a.setAttribute("aria-current", isActive ? "true" : "false");
+        });
+      }
+
+      function updateProgress() {
+        var doc = document.documentElement;
+        var max = doc.scrollHeight - doc.clientHeight;
+        var pct = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+        progressBar.style.width = pct + "%";
+        updateSectionButtons();
+      }
+
+      marked.setOptions({
+        gfm: true,
+        breaks: false
+      });
+
+      var manuscriptUrl = safeFile + "?v=" + Date.now();
+
+      fetch(manuscriptUrl, { cache: "no-store" })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Could not load " + safeFile + " (" + response.status + ")");
+          return response.text();
+        })
+        .then(function (markdown) {
+          var rawHtml = marked.parse(markdown);
+          book.innerHTML = DOMPurify.sanitize(rawHtml);
+          makeUniqueIds();
+          wrapChapters();
+          wrapTechnicalSections();
+          buildChapterTabs();
+
+          var title = book.querySelector("h1");
+          if (title) {
+            brand.textContent = title.textContent;
+            document.title = title.textContent;
+          }
+
+          status.hidden = true;
+          book.hidden = false;
+
+          if (location.hash) {
+            requestAnimationFrame(function () {
+              var target = document.getElementById(location.hash.slice(1));
+              if (target) target.scrollIntoView();
+            });
+          }
+
+          updateProgress();
+        })
+        .catch(function (error) {
+          status.innerHTML =
+            "<strong>The reader is ready, but no manuscript could be opened.</strong><br><br>" +
+            "Create <code>manuscript.md</code> in this repository, then reload the page.<br><br>" +
+            "<small>" + String(error.message).replace(/[<>]/g, "") + "</small>";
+        });
+
+      document.getElementById("practice").addEventListener("click", function () {
+        var on = document.body.classList.toggle("practice-mode");
+        this.setAttribute("aria-pressed", on ? "true" : "false");
+        this.textContent = on ? "Reveal" : "Practice";
+      });
+
+      document.getElementById("theme").addEventListener("click", function () {
+        var dark = document.documentElement.dataset.theme === "dark";
+        document.documentElement.dataset.theme = dark ? "" : "dark";
+        localStorage.setItem("reader-theme", dark ? "light" : "dark");
+      });
+
+      document.getElementById("smaller").addEventListener("click", function () {
+        var n = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--reader-size")) || 19;
+        document.documentElement.style.setProperty("--reader-size", Math.max(15, n - 1) + "px");
+      });
+
+      document.getElementById("larger").addEventListener("click", function () {
+        var n = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--reader-size")) || 19;
+        document.documentElement.style.setProperty("--reader-size", Math.min(26, n + 1) + "px");
+      });
+
+      document.getElementById("width").addEventListener("click", function () {
+        var current = getComputedStyle(document.documentElement).getPropertyValue("--measure").trim();
+        document.documentElement.style.setProperty("--measure", current === "900px" ? "720px" : "900px");
+      });
+
+      var systemToggle = document.getElementById("systemToggle");
+      var systemBody = document.getElementById("systemBody");
+      systemToggle.addEventListener("click", function () {
+        var open = systemToggle.getAttribute("aria-expanded") === "true";
+        systemToggle.setAttribute("aria-expanded", open ? "false" : "true");
+        systemBody.hidden = open;
+        systemToggle.lastElementChild.textContent = open ? "+" : "−";
+      });
+
+      var savedTheme = localStorage.getItem("reader-theme");
+      if (savedTheme === "dark") document.documentElement.dataset.theme = "dark";
+
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      window.addEventListener("resize", updateProgress);
+    })();
+  </script>
+
 <script>
-(async()=>{
-  const rawRoot='https://raw.githubusercontent.com/TitanicParker/making-sense--together/main/';
-  try{
-    const r=await fetch(rawRoot+'index.html',{cache:'no-store'});
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    let html=await r.text();
-
-    const fetchBridge=`<script>
 (function(){
-  const RAW='https://raw.githubusercontent.com/TitanicParker/making-sense--together/main/';
-  const nativeFetch=window.fetch.bind(window);
-  window.fetch=function(input,init){
-    if(typeof input==='string' && !/^[a-z][a-z0-9+.-]*:/i.test(input) && !input.startsWith('//') && !input.startsWith('/')){
-      input=RAW+input.replace(/^\\.\\//,'');
-    }
-    return nativeFetch(input,init);
-  };
-})();
-<\\/script>`;
-
-    html=html.replace(/<head>/i,'<head>'+fetchBridge);
-    document.open();
-    document.write(html);
-    document.close();
-  }catch(e){
-    document.body.innerHTML='<div class="loading"><div><strong>Making Sense Together</strong><p>This page could not be opened just now.</p><p><a href="https://github.com/TitanicParker/making-sense--together">Open the source repository</a></p></div></div>';
-    console.error(e);
+  var topbar=document.querySelector('.topbar');
+  var toggle=document.getElementById('mobileNavToggle');
+  if(!topbar||!toggle)return;
+  function closeMenu(){
+    topbar.classList.remove('nav-open');
+    toggle.setAttribute('aria-expanded','false');
+    toggle.textContent='Menu';
   }
+  toggle.addEventListener('click',function(){
+    var open=topbar.classList.toggle('nav-open');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.textContent=open?'Close':'Menu';
+  });
+  window.addEventListener('resize',function(){if(window.innerWidth>760)closeMenu()});
 })();
 </script>
 </body>
