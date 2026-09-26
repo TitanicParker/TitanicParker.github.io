@@ -98,8 +98,8 @@ function parseUsage(md){
   return usage;
 }
 Promise.all([
-  fetch("https://titanicparker.github.io/making-sense-together/working_54_canonical_forms_with_chapter_placeholders.md",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Could not load ledger");return r.text()}),
-  fetch("https://titanicparker.github.io/making-sense-together/manuscript.md",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Could not load manuscript");return r.text()})
+  fetch("./working_54_canonical_forms_with_chapter_placeholders.md",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Could not load ledger");return r.text()}),
+  fetch("./manuscript.md",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Could not load manuscript");return r.text()})
 ]).then(function(results){
 var md=results[0],usage=parseUsage(results[1]);
 var shorts={};md.replace(/^\s*(\d+)\. \*\*(.+?)\*\*\s*$/gm,function(_,n,x){n=+n;if(n>=1&&n<=54)shorts[n]=x;return _});
