@@ -46,18 +46,18 @@ tr.highlight td{background:var(--accent-soft)}
 </head>
 <body>
 <header class="topbar"><div class="brand">Making Sense Together · Semantic Field</div><button class="control mobile-nav-toggle" id="mobileNavToggle" aria-expanded="false" aria-controls="siteToolbar">Menu</button><div class="toolbar" id="siteToolbar">
-<a class="control" href="strongest-claim.html">Claim</a>
-<a class="control" href="index.html">Reader</a>
-<a class="control" href="definitions.html">Definitions</a>
-<a class="control" href="forms.html">54 Forms</a>
-<a class="control" href="method.html">Method</a>
+<a class="control" href="https://titanicparker.github.io/making-sense-together/strongest-claim.html">Claim</a>
+<a class="control" href="https://titanicparker.github.io/making-sense-together/index.html">Reader</a>
+<a class="control" href="https://titanicparker.github.io/making-sense-together/definitions.html">Definitions</a>
+<a class="control" href="https://titanicparker.github.io/making-sense-together/forms.html">54 Forms</a>
+<a class="control" href="https://titanicparker.github.io/making-sense-together/method.html">Method</a>
 <button class="control" id="theme" aria-label="Toggle theme">◐</button>
 </div></header>
 <main><section class="panel">
 <div class="intro">
 <h1>The semantic field</h1>
 <p class="lede">Five ordinary-language attractors for each of the 54 canonical coordinates. These phrases are exploratory: they are ways of approaching the invariant from different directions, not replacements for the canonical short forms and not definitions.</p>
-<div class="note"><strong>How this page was made.</strong> Ten 3–5 word candidates were generated for every invariant after blind-recovery, cue-ablation, and repeated reconstruction work. Five were curated here for ordinary readability, structural clarity, and variation. The underlying spreadsheet is intentionally not published. <a href="method.html#semantic-field">Read the method.</a></div>
+<div class="note"><strong>How this page was made.</strong> Ten 3–5 word candidates were generated for every invariant after blind-recovery, cue-ablation, and repeated reconstruction work. Five were curated here for ordinary readability, structural clarity, and variation. The underlying spreadsheet is intentionally not published. <a href="https://titanicparker.github.io/making-sense-together/method.html#semantic-field">Read the method.</a></div>
 </div>
 <div class="tools">
 <select id="t"><option value="">All transformations</option><option>Differentiation</option><option>Opening</option><option>Relating</option><option>Repair</option><option>Integration</option><option>Settlement</option></select>
@@ -91,7 +91,7 @@ var data=[];
 function cardNo(t,c,p){return orderT.indexOf(t)*9+orderC.indexOf(c)*3+orderP.indexOf(p)+1}
 function slugify(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
 function core(t,c,p){return tCore[t]+" "+cCore[c]+", "+pCore[p]}
-fetch("working_54_canonical_forms_with_chapter_placeholders.md",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Could not load canonical ledger");return r.text()}).then(function(md){
+fetch("https://titanicparker.github.io/making-sense-together/working_54_canonical_forms_with_chapter_placeholders.md",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Could not load canonical ledger");return r.text()}).then(function(md){
 var shorts={};md.replace(/^\s*(\d+)\. \*\*(.+?)\*\*\s*$/gm,function(_,n,x){n=+n;if(n>=1&&n<=54)shorts[n]=x;return _});
 orderT.forEach(function(t){orderC.forEach(function(c){orderP.forEach(function(p){var n=cardNo(t,c,p);data.push({n:n,t:t,c:c,p:p,short:shorts[n]||"",core:core(t,c,p),examples:examples[n]||[]})})})});
 var params=new URLSearchParams(location.search),requested=params.get("form");
@@ -109,9 +109,9 @@ var rows=document.getElementById("rows");rows.innerHTML="";var last="";
 data.filter(function(x){var hay=(x.n+" "+x.short+" "+x.t+" "+x.c+" "+x.p+" "+x.core+" "+x.examples.join(" ")).toLowerCase();return(!tv||x.t===tv)&&(!cv||x.c===cv)&&(!pv||x.p===pv)&&(!q||hay.indexOf(q)>-1)}).forEach(function(x){
 if(!tv&&x.t!==last){var g=document.createElement("tr");g.className="group";g.innerHTML="<td colspan='5'>"+x.t+"</td>";rows.appendChild(g);last=x.t}
 var tr=document.createElement("tr");tr.dataset.form=String(x.n);
-var coord="<a href='definitions.html#definition-"+slugify(x.t)+"'>"+x.t+"</a> × <a href='definitions.html#definition-"+slugify(x.c)+"'>"+x.c+"</a> × <a href='definitions.html#definition-"+slugify(x.p)+"'>"+x.p+"</a>";
+var coord="<a href='https://titanicparker.github.io/making-sense-together/definitions.html#definition-"+slugify(x.t)+"'>"+x.t+"</a> × <a href='https://titanicparker.github.io/making-sense-together/definitions.html#definition-"+slugify(x.c)+"'>"+x.c+"</a> × <a href='https://titanicparker.github.io/making-sense-together/definitions.html#definition-"+slugify(x.p)+"'>"+x.p+"</a>";
 var chips=x.examples.map(function(v){return "<span class='example'>"+v+"</span>"}).join("");
-tr.innerHTML="<td>"+x.n+"</td><td><div class='short'>"+x.short+"</div><a class='form-link' href='forms.html?form="+x.n+"'>Open canonical form</a></td><td class='coordinate'>"+coord+"</td><td class='core'>"+x.core+"</td><td class='examples'>"+chips+"</td>";
+tr.innerHTML="<td>"+x.n+"</td><td><div class='short'>"+x.short+"</div><a class='form-link' href='https://titanicparker.github.io/making-sense-together/forms.html?form="+x.n+"'>Open canonical form</a></td><td class='coordinate'>"+coord+"</td><td class='core'>"+x.core+"</td><td class='examples'>"+chips+"</td>";
 rows.appendChild(tr)
 });
 }
