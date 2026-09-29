@@ -174,6 +174,18 @@ footer{margin-top:38px;padding:22px 0 0;border-top:1px solid var(--rule);display
   </div>
 </section>
 
+<section class="current" aria-labelledby="current-crypto-title">
+  <div>
+    <div class="kicker">Current market-structure research</div>
+    <h2 id="current-crypto-title">Fixed Structure Research</h2>
+    <p>A living illustrated field guide to a fixed logarithmic market structure: one branch tests adjacent-level trading rules; the other studies TOTAL, market expansion and contraction, and the 100-period SMA. Both feed into a shared evidence notebook of charts, measurements, failures and unresolved cases.</p>
+  </div>
+  <div class="current-links">
+    <a class="primary-link" href="https://titanicparker.github.io/crypto/">Open field guide</a>
+    <a class="source-link" href="https://github.com/TitanicParker/crypto">Source</a>
+  </div>
+</section>
+
 <section class="current" aria-labelledby="current-sequence-title">
   <div>
     <div class="kicker">Current systems exhibit</div>
@@ -213,7 +225,7 @@ footer{margin-top:38px;padding:22px 0 0;border-top:1px solid var(--rule);display
 </section>
 </main>
 
-<footer><strong>TitanicParker Project Museum</strong><span>Current legal work, Spot On, Making Sense Together, Maya's Bike, Liam's Case, The Neuropathy Question, The Eye of the Argument, Sequence and Case Readable are foregrounded. Historical repositories remain available but visually subordinate.</span></footer>
+<footer><strong>TitanicParker Project Museum</strong><span>Current legal work, Spot On, Making Sense Together, Maya's Bike, Liam's Case, The Neuropathy Question, The Eye of the Argument, Fixed Structure Research, Sequence and Case Readable are foregrounded. Historical repositories remain available but visually subordinate.</span></footer>
 </div>
 
 <script>
@@ -329,7 +341,7 @@ const law=archived.filter(p=>p.category==='law').sort((a,b)=>{
 const byCategory={law};
 for(const c of categoryOrder.slice(1)) byCategory[c]=archived.filter(p=>p.category===c).sort((a,b)=>a.order-b.order);
 
-document.querySelector('#total').textContent=archived.length+9;
+document.querySelector('#total').textContent=archived.length+10;
 const groups=document.querySelector('#groups');
 const projectRows=[];
 const groupEls=[];
