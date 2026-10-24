@@ -506,5 +506,63 @@ q.addEventListener('input',()=>{
   status.textContent=x?`${totalVisible} matching archived projects`:'Categories closed by default';
 });
 </script>
+
+<style>
+/* Compact museum: latest ten and subject shelves begin collapsed. */
+section.current,.controls,#archive{display:none!important}
+.hero-main{min-height:190px;padding:28px}.hero-main h1{font-size:clamp(46px,7vw,80px);margin:12px 0}.hero-side{padding:20px}
+.compact-directory{margin:22px 0 30px}.compact-directory h2{font-size:clamp(26px,4vw,38px);margin:0 0 8px;font-weight:500}
+.compact-directory>p{color:var(--muted);font:14px/1.6 var(--sans)}
+.compact-directory details{border:1px solid var(--rule);margin:9px 0;background:var(--white)}
+.compact-directory summary{cursor:pointer;display:flex;justify-content:space-between;gap:12px;padding:17px 20px;font-family:var(--sans)}
+.compact-directory summary strong{font-size:15px}.compact-directory summary span{font-size:12px;color:var(--muted)}
+.compact-directory summary:focus-visible,.compact-directory a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.compact-directory .entries{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--rule)}
+.compact-directory article{padding:13px 18px;border-bottom:1px solid var(--rule);min-width:0}
+.compact-directory article:nth-child(odd){border-right:1px solid var(--rule)}
+.compact-directory h3{font:600 16px/1.3 var(--serif);margin:0 0 4px}
+.compact-directory article p{font:12px/1.45 var(--sans);margin:0 0 8px;color:var(--muted)}
+.compact-directory .links{display:flex;flex-wrap:wrap;gap:12px;font:700 11px/1.5 var(--sans)}
+@media(max-width:650px){.hero-side{display:none}.hero{display:block}.compact-directory .entries{grid-template-columns:1fr}.compact-directory article:nth-child(odd){border-right:0}}
+</style>
+<script>
+(()=>{
+const newest=['resolve','how-to-do-it','everything-fresh','health','the-unmoved-mover','fiche-ceathar','the-biography-of-safety','scathing-protest','pssssst','an-leabhar'];
+const additional=[
+['Project Museum','TitanicParker.github.io','tools','The central museum and project directory'],
+['The Moving Invariant','the-moving-invariant','language','Language and invariant structure'],
+['Perpetual Essays','perpetual-essays','essays','Essays and developing research'],
+['Why GPT','why-gpt','language','Writing and research about GPT'],
+['Nucleus','Nucleus','law','Evidential and ethical research'],
+['Spot On','spot-on','law','Documentary analysis and argument'],
+['Imprecise Précis','imprecise-precis','essays','An essay and reading room'],
+['New Repository','new-repository','tools','Empty repository'],
+['Fiche Ceathar','fiche-ceathar','language','The 54 atlas and research protocols'],
+['Health','health','law','Health diary and writing'],
+['Everything Fresh','everything-fresh','language','Operative Centre research and laboratory']];
+const cats=['language','law','essays','geometry','tools'];
+const labels={language:'Language & Meaning',law:'Law & Governance',essays:'Books & Essays',geometry:'Geometry & Systems',tools:'Tools & Experiments'};
+const special={'how-to-do-it':'language','the-unmoved-mover':'law','pssssst':'law','an-leabhar':'essays','legal':'law','making-sense--together':'language','scathing-protest':'law','the-biography-of-safety':'law','mayas-bike':'language','Liams-case':'law','the-neuropathy-question':'law','the-eye-of-the-argument':'law','crypto':'tools','sequence':'law','case-readable':'law','resolve':'language'};
+const records=new Map();
+P.forEach(p=>{const category=cats.find(c=>p[2].split(' ').includes(c))||'tools';records.set(p[1],{title:p[0],repo:p[1],category,description:descriptions[p[1]]||'',open:'https://titanicparker.github.io/'+p[1]+'/'});});
+document.querySelectorAll('section.current').forEach(el=>{
+const source=[...el.querySelectorAll('a')].find(a=>a.href.startsWith('https://github.com/TitanicParker/')&&!a.href.includes('/blob/'));if(!source)return;
+const name=source.href.split('github.com/TitanicParker/')[1].split('/')[0];
+const live=[...el.querySelectorAll('a')].find(a=>a.href.startsWith('https://titanicparker.github.io/'));
+records.set(name,{title:el.querySelector('h2')?.textContent.trim()||name,repo:name,category:special[name]||'tools',description:el.querySelector('p')?.textContent.trim()||'',open:live?.href||source.href});
+});
+additional.forEach(p=>{if(!records.has(p[1]))records.set(p[1],{title:p[0],repo:p[1],category:p[2],description:p[3],open:p[1]==='new-repository'?'https://github.com/TitanicParker/new-repository':'https://titanicparker.github.io/'+p[1]+'/'});});
+const root=document.createElement('main');root.className='compact-directory';root.id='compact-directory';
+const header=document.createElement('h2');header.textContent='Explore the collection';const lead=document.createElement('p');lead.textContent='Latest ten first, then the entire collection by subject. Sections begin closed; open just the shelf you need.';root.append(header,lead);
+function shelf(label,arr){
+const details=document.createElement('details'),summary=document.createElement('summary'),name=document.createElement('strong'),count=document.createElement('span'),grid=document.createElement('div');grid.className='entries';name.textContent=label;count.textContent=arr.length+' projects';summary.append(name,count);details.append(summary);
+arr.forEach(p=>{const article=document.createElement('article'),h=document.createElement('h3'),d=document.createElement('p'),links=document.createElement('div'),open=document.createElement('a'),source=document.createElement('a');links.className='links';h.textContent=p.title;d.textContent=p.description||'Project archive';open.href=p.open;open.textContent='Open';source.href='https://github.com/TitanicParker/'+p.repo;source.textContent='Source';links.append(open,source);article.append(h,d,links);grid.append(article);});details.append(grid);root.append(details);
+}
+shelf('Latest 10 — newly added',newest.map(n=>records.get(n)).filter(Boolean));
+const selected=new Set(newest);cats.forEach(c=>shelf(labels[c],[...records.values()].filter(p=>!selected.has(p.repo)&&p.category===c).sort((a,b)=>a.title.localeCompare(b.title))));
+document.querySelector('section.current').before(root);
+const counter=document.querySelector('#total');if(counter)counter.textContent=records.size;
+})();
+</script>
 </body>
 </html>
