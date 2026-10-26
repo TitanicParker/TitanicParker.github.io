@@ -527,8 +527,9 @@ section.current,.controls,#archive{display:none!important}
 </style>
 <script>
 (()=>{
-const newest=['resolve','how-to-do-it','everything-fresh','health','the-unmoved-mover','fiche-ceathar','the-biography-of-safety','scathing-protest','pssssst','an-leabhar'];
+const newest=['collab','resolve','how-to-do-it','everything-fresh','health','the-unmoved-mover','fiche-ceathar','the-biography-of-safety','scathing-protest','pssssst','an-leabhar'];
 const additional=[
+['Collab — Portable Structuracy','collab','language','Sentence-to-structure experiment, firewalls and future flip-card atlas'],
 ['Project Museum','TitanicParker.github.io','tools','The central museum and project directory'],
 ['The Moving Invariant','the-moving-invariant','language','Language and invariant structure'],
 ['Perpetual Essays','perpetual-essays','essays','Essays and developing research'],
@@ -542,7 +543,7 @@ const additional=[
 ['Everything Fresh','everything-fresh','language','Operative Centre research and laboratory']];
 const cats=['language','law','essays','geometry','tools'];
 const labels={language:'Language & Meaning',law:'Law & Governance',essays:'Books & Essays',geometry:'Geometry & Systems',tools:'Tools & Experiments'};
-const special={'how-to-do-it':'language','the-unmoved-mover':'law','pssssst':'law','an-leabhar':'essays','legal':'law','making-sense--together':'language','scathing-protest':'law','the-biography-of-safety':'law','mayas-bike':'language','Liams-case':'law','the-neuropathy-question':'law','the-eye-of-the-argument':'law','crypto':'tools','sequence':'law','case-readable':'law','resolve':'language'};
+const special={'how-to-do-it':'language','the-unmoved-mover':'law','pssssst':'law','an-leabhar':'essays','legal':'law','making-sense--together':'language','scathing-protest':'law','the-biography-of-safety':'law','mayas-bike':'language','Liams-case':'law','the-neuropathy-question':'law','the-eye-of-the-argument':'law','crypto':'tools','sequence':'law','case-readable':'law','resolve':'language','collab':'language'};
 const records=new Map();
 P.forEach(p=>{const category=cats.find(c=>p[2].split(' ').includes(c))||'tools';records.set(p[1],{title:p[0],repo:p[1],category,description:descriptions[p[1]]||'',open:'https://titanicparker.github.io/'+p[1]+'/'});});
 document.querySelectorAll('section.current').forEach(el=>{
@@ -553,12 +554,12 @@ records.set(name,{title:el.querySelector('h2')?.textContent.trim()||name,repo:na
 });
 additional.forEach(p=>{if(!records.has(p[1]))records.set(p[1],{title:p[0],repo:p[1],category:p[2],description:p[3],open:p[1]==='new-repository'?'https://github.com/TitanicParker/new-repository':'https://titanicparker.github.io/'+p[1]+'/'});});
 const root=document.createElement('main');root.className='compact-directory';root.id='compact-directory';
-const header=document.createElement('h2');header.textContent='Explore the collection';const lead=document.createElement('p');lead.textContent='Latest ten first, then the entire collection by subject. Sections begin closed; open just the shelf you need.';root.append(header,lead);
+const header=document.createElement('h2');header.textContent='Explore the collection';const lead=document.createElement('p');lead.textContent='Featured recent projects first, then the entire collection by subject. Sections begin closed; open just the shelf you need.';root.append(header,lead);
 function shelf(label,arr){
 const details=document.createElement('details'),summary=document.createElement('summary'),name=document.createElement('strong'),count=document.createElement('span'),grid=document.createElement('div');grid.className='entries';name.textContent=label;count.textContent=arr.length+' projects';summary.append(name,count);details.append(summary);
 arr.forEach(p=>{const article=document.createElement('article'),h=document.createElement('h3'),d=document.createElement('p'),links=document.createElement('div'),open=document.createElement('a'),source=document.createElement('a');links.className='links';h.textContent=p.title;d.textContent=p.description||'Project archive';open.href=p.open;open.textContent='Open';source.href='https://github.com/TitanicParker/'+p.repo;source.textContent='Source';links.append(open,source);article.append(h,d,links);grid.append(article);});details.append(grid);root.append(details);
 }
-shelf('Latest 10 — newly added',newest.map(n=>records.get(n)).filter(Boolean));
+shelf('Recent repositories — newly added',newest.map(n=>records.get(n)).filter(Boolean));
 const selected=new Set(newest);cats.forEach(c=>shelf(labels[c],[...records.values()].filter(p=>!selected.has(p.repo)&&p.category===c).sort((a,b)=>a.title.localeCompare(b.title))));
 document.querySelector('section.current').before(root);
 const counter=document.querySelector('#total');if(counter)counter.textContent=records.size;
