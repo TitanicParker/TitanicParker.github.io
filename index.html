@@ -87,6 +87,18 @@ footer{margin-top:38px;padding:22px 0 0;border-top:1px solid var(--rule);display
     <div class="hero-count"><b id="total">—</b><span>public exhibits</span></div>
   </aside>
 </header>
+<section class="current" aria-labelledby="current-prima-facie-title">
+  <div>
+    <div class="kicker">Counsel case · primary evidence</div>
+    <h2 id="current-prima-facie-title">Prima Facie</h2>
+    <p>Legal reading room: the prima facie case, master manuscript, searchable clinical record and original handwritten interview.</p>
+  </div>
+  <div class="current-links">
+    <a class="primary-link" href="https://titanicparker.github.io/prima-facie/">Open case</a>
+    <a class="source-link" href="https://github.com/TitanicParker/prima-facie">Source</a>
+  </div>
+</section>
+
 <section class="current" aria-labelledby="current-how-to-do-it-title">
   <div>
     <div class="kicker">Learning completed intelligibility</div>
@@ -172,17 +184,7 @@ footer{margin-top:38px;padding:22px 0 0;border-top:1px solid var(--rule);display
   </div>
 </section>
 
-<section class="current" aria-labelledby="current-prima-facie-title">
-  <div>
-    <div class="kicker">Counsel case · primary evidence</div>
-    <h2 id="current-prima-facie-title">Prima Facie</h2>
-    <p>Legal reading room: the prima facie case, master manuscript, searchable clinical record and original handwritten interview.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/prima-facie/">Open case</a>
-    <a class="source-link" href="https://github.com/TitanicParker/prima-facie">Source</a>
-  </div>
-</section>
+
 
 <section class="current" aria-labelledby="current-legal-title">
   <div>
@@ -539,7 +541,7 @@ section.current,.controls,#archive{display:none!important}
 </style>
 <script>
 (()=>{
-const newest=['percipient','the-unforgiving-minute','how-to-do-it','everything-fresh','health','the-unmoved-mover','fiche-ceathar','the-biography-of-safety','scathing-protest','pssssst','an-leabhar','new-repository','collab','resolve'];
+const newest=['prima-facie','percipient','the-unforgiving-minute','how-to-do-it','everything-fresh','health','the-unmoved-mover','fiche-ceathar','the-biography-of-safety','scathing-protest','pssssst','an-leabhar','new-repository','collab','resolve'];
 const additional=[
 ['Structuracy — Sentence Game','percipient','language','Play two sentence games: notice what one sentence does, or spot exactly what changes between two. Loadable sentence cartridges and an everyday-language interface.'],
     ['The Unforgiving Minute — The Freedom to Love','the-unforgiving-minute','essays','Two connected reflections: the first question of self-awareness and the second question of compassion, with everyday examples'],
@@ -557,7 +559,7 @@ const additional=[
 ['Everything Fresh','everything-fresh','language','Operative Centre research and laboratory']];
 const cats=['language','law','essays','geometry','tools'];
 const labels={language:'Language & Meaning',law:'Law & Governance',essays:'Books & Essays',geometry:'Geometry & Systems',tools:'Tools & Experiments'};
-const special={'how-to-do-it':'language','the-unmoved-mover':'law','pssssst':'law','an-leabhar':'essays','legal':'law','making-sense--together':'language','scathing-protest':'law','the-biography-of-safety':'law','mayas-bike':'language','Liams-case':'law','the-neuropathy-question':'law','the-eye-of-the-argument':'law','crypto':'tools','sequence':'law','case-readable':'law','resolve':'language','collab':'language'};
+const special={'prima-facie':'law','how-to-do-it':'language','the-unmoved-mover':'law','pssssst':'law','an-leabhar':'essays','legal':'law','making-sense--together':'language','scathing-protest':'law','the-biography-of-safety':'law','mayas-bike':'language','Liams-case':'law','the-neuropathy-question':'law','the-eye-of-the-argument':'law','crypto':'tools','sequence':'law','case-readable':'law','resolve':'language','collab':'language'};
 const records=new Map();
 P.forEach(p=>{const category=cats.find(c=>p[2].split(' ').includes(c))||'tools';records.set(p[1],{title:p[0],repo:p[1],category,description:descriptions[p[1]]||'',open:'https://titanicparker.github.io/'+p[1]+'/'});});
 document.querySelectorAll('section.current').forEach(el=>{
