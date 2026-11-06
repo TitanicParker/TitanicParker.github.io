@@ -87,6 +87,17 @@ footer{margin-top:38px;padding:22px 0 0;border-top:1px solid var(--rule);display
     <div class="hero-count"><b id="total">—</b><span>public exhibits</span></div>
   </aside>
 </header>
+<section class="current" aria-labelledby="current-dialogue-archive-title">
+  <div>
+    <div class="kicker">Live working archive · Fiche Ceathar</div>
+    <h2 id="current-dialogue-archive-title">The 54 — Ordinary Dialogues</h2>
+    <p>A growing dialogue archive generated cell by cell. Read ordinary two-person exchanges, explore the 54 forms, and follow the working Markdown as new batches are committed.</p>
+  </div>
+  <div class="current-links">
+    <a class="primary-link" href="https://titanicparker.github.io/new-repository/#archive">Open archive</a>
+    <a class="source-link" href="https://github.com/TitanicParker/new-repository/blob/main/FICHE_CEATHAR_54_DIALOGUES_WORKING.md">Working file</a>
+  </div>
+</section>
 <section class="current" aria-labelledby="current-prima-facie-title">
   <div>
     <div class="kicker">Counsel case · primary evidence</div>
@@ -553,7 +564,7 @@ const additional=[
 ['Nucleus','Nucleus','law','Evidential and ethical research'],
 ['Spot On','spot-on','law','Documentary analysis and argument'],
 ['Imprecise Précis','imprecise-precis','essays','An essay and reading room'],
-['New Repository','new-repository','tools','Empty repository'],
+['The 54 — Dialogue Archive','new-repository','language','A living collection of ordinary two-person dialogues across the 54 forms, published from a working Markdown corpus.'],
 ['Fiche Ceathar','fiche-ceathar','language','The 54 atlas and research protocols'],
 ['Health','health','law','Health diary and writing'],
 ['Everything Fresh','everything-fresh','language','Operative Centre research and laboratory']];
@@ -568,7 +579,7 @@ const name=source.href.split('github.com/TitanicParker/')[1].split('/')[0];
 const live=[...el.querySelectorAll('a')].find(a=>a.href.startsWith('https://titanicparker.github.io/'));
 records.set(name,{title:el.querySelector('h2')?.textContent.trim()||name,repo:name,category:special[name]||'tools',description:el.querySelector('p')?.textContent.trim()||'',open:live?.href||source.href});
 });
-additional.forEach(p=>{if(!records.has(p[1]))records.set(p[1],{title:p[0],repo:p[1],category:p[2],description:p[3],open:p[1]==='new-repository'?'https://github.com/TitanicParker/new-repository':'https://titanicparker.github.io/'+p[1]+'/'});});
+additional.forEach(p=>{if(!records.has(p[1]))records.set(p[1],{title:p[0],repo:p[1],category:p[2],description:p[3],open:'https://titanicparker.github.io/'+p[1]+'/'});});
 const root=document.createElement('main');root.className='compact-directory';root.id='compact-directory';
 const header=document.createElement('h2');header.textContent='Explore the collection';const lead=document.createElement('p');lead.textContent='Featured recent projects first, then the entire collection by subject. Sections begin closed; open just the shelf you need.';root.append(header,lead);
 function shelf(label,arr){
