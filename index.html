@@ -593,5 +593,28 @@ document.querySelector('section.current').before(root);
 const counter=document.querySelector('#total');if(counter)counter.textContent=records.size;
 })();
 </script>
+
+<style>
+/* Counsel-facing featured exhibition, visible above the collapsible museum shelves. */
+#unanswered-referral-feature{margin:22px 0 26px;padding:32px 34px;border:1px solid var(--accent);background:linear-gradient(120deg,var(--white),var(--paper-deep));box-shadow:var(--shadow);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:end}
+#unanswered-referral-feature h2{font:600 clamp(34px,5vw,56px)/1 var(--serif);letter-spacing:-.04em;margin:9px 0 13px}
+#unanswered-referral-feature p{margin:0;max-width:660px;color:var(--muted);font-size:16px}
+#unanswered-referral-feature .links{display:flex;flex-wrap:wrap;gap:11px;align-items:center}
+#unanswered-referral-feature .links a{text-decoration:none;font:800 11px var(--sans);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+#unanswered-referral-feature .visit{background:var(--accent);color:var(--white);padding:13px 16px}
+#unanswered-referral-feature .source{padding:12px 14px;border:1px solid var(--rule)}
+@media(max-width:780px){#unanswered-referral-feature{grid-template-columns:1fr;padding:25px}}
+</style>
+<script>
+(()=>{
+  const directory=document.querySelector('#compact-directory');
+  if(!directory||document.getElementById('unanswered-referral-feature'))return;
+  const section=document.createElement('section');
+  section.id='unanswered-referral-feature';
+  section.setAttribute('aria-labelledby','unanswered-referral-title');
+  section.innerHTML='<div><div class="kicker">Featured · Orientation for independent counsel</div><h2 id="unanswered-referral-title">The Unanswered Referral</h2><p>A standalone, source-referenced essay tracing the 2017 painful-foot referral, specialist clinical account and the hospital’s nine-year defence. Begin with the central question, then examine the documentary record.</p></div><div class="links"><a class="visit" href="https://titanicparker.github.io/the-unanswered-referral/">Read the essay</a><a class="source" href="https://github.com/TitanicParker/the-unanswered-referral">Repository</a></div>';
+  directory.before(section);
+})();
+</script>
 </body>
 </html>
