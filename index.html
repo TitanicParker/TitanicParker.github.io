@@ -1,403 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#f2eee6">
-<meta name="description" content="TitanicParker Project Museum — current work foregrounded, archive folded by category.">
-<title>TitanicParker — Project Museum</title>
-<style>
-:root{
-  --paper:#f2eee6;
-  --paper-deep:#e8e0d4;
-  --ink:#191816;
-  --muted:#6e675e;
-  --rule:#c9bfb1;
-  --accent:#7f3027;
-  --accent-soft:#d9b9b2;
-  --white:#fbf9f4;
-  --shadow:0 18px 45px rgba(54,44,34,.08);
-  --serif:ui-serif,Georgia,Cambria,"Times New Roman",Times,serif;
-  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background:var(--paper)}
-body{margin:0;color:var(--ink);font:17px/1.6 var(--serif);background:radial-gradient(circle at 10% -10%,rgba(127,48,39,.08),transparent 34rem),linear-gradient(180deg,var(--paper),#f6f2eb 42%,var(--paper));text-rendering:optimizeLegibility}
-a{color:inherit;text-underline-offset:.2em;text-decoration-thickness:1px}
-a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-input{font:inherit}
-.wrap{width:min(1040px,calc(100% - 36px));margin:auto;padding:26px 0 50px}
-.skip{position:fixed;left:12px;top:12px;z-index:99;transform:translateY(-180%);padding:10px 14px;background:var(--ink);color:var(--paper);font:700 12px/1 var(--sans);text-decoration:none}.skip:focus{transform:none}
-.kicker,.label,.meta,.repo-name,.group-count,.status,.search{font-family:var(--sans)}
-.kicker{font-size:10px;font-weight:800;letter-spacing:.23em;text-transform:uppercase;color:var(--accent)}
-
-.hero{border:1px solid var(--rule);background:rgba(251,249,244,.74);box-shadow:var(--shadow);display:grid;grid-template-columns:minmax(0,1fr) 235px;position:relative;overflow:hidden}
-.hero:after{content:"";position:absolute;width:340px;height:340px;border:1px solid var(--accent-soft);border-radius:50%;right:-170px;bottom:-195px;opacity:.7;pointer-events:none}
-.hero-main{padding:clamp(42px,7vw,78px);min-height:460px;display:flex;flex-direction:column;justify-content:flex-end}
-h1{margin:18px 0 24px;font-size:clamp(58px,9vw,116px);font-weight:600;line-height:.8;letter-spacing:-.06em;max-width:760px}
-.hero-copy{max-width:690px;margin:0;color:#454039;font-size:clamp(19px,2vw,26px);line-height:1.36}
-.hero-side{border-left:1px solid var(--rule);padding:32px 26px;display:flex;flex-direction:column;justify-content:space-between;font-family:var(--sans)}
-.hero-side strong{display:block;font:600 27px/1.05 var(--serif);letter-spacing:-.02em;margin-top:5px}.hero-side p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.label{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-.hero-count{padding-top:22px;border-top:1px solid var(--rule)}.hero-count b{display:block;font:600 58px/.9 var(--serif);letter-spacing:-.05em;color:var(--accent)}.hero-count span{display:block;margin-top:8px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-
-.current{margin:26px 0 18px;border:1px solid var(--ink);background:var(--white);display:grid;grid-template-columns:1fr auto;gap:28px;padding:30px 32px;align-items:end;box-shadow:0 10px 32px rgba(54,44,34,.06)}
-.current + .current{margin-top:-6px}
-.current.spot-on{border-color:var(--accent);background:linear-gradient(135deg,var(--white),rgba(217,185,178,.18))}
-.current h2{margin:9px 0 10px;font-size:clamp(36px,5vw,62px);line-height:.92;letter-spacing:-.04em;font-weight:600}.current p{max-width:700px;margin:0;color:#514b43}.current-links{display:flex;gap:14px;flex-wrap:wrap;justify-content:flex-end}.primary-link,.source-link{font:800 10px/1.2 var(--sans);letter-spacing:.07em;text-transform:uppercase;text-decoration:none;white-space:nowrap}.primary-link{padding:12px 15px;background:var(--accent);color:var(--white)}.source-link{padding:11px 14px;border:1px solid var(--rule);color:var(--muted)}.primary-link:hover,.source-link:hover{filter:brightness(.94)}
-
-.controls{position:sticky;top:12px;z-index:20;margin:18px 0 36px;padding:12px;border:1px solid var(--rule);background:rgba(242,238,230,.94);backdrop-filter:blur(14px);box-shadow:0 10px 30px rgba(54,44,34,.06)}
-.search{width:100%;min-height:45px;padding:11px 14px;border:0;background:rgba(255,255,255,.44);color:var(--ink);font-size:14px}.search::placeholder{color:var(--muted)}
-
-.collection-head{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--ink)}.collection-head h2{margin:7px 0 0;font-size:clamp(36px,5vw,58px);line-height:.95;letter-spacing:-.04em;font-weight:600}.status{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-bottom:4px}
-.groups{display:grid;gap:10px}
-details.group{border:1px solid var(--rule);background:rgba(251,249,244,.48)}
-details.group[open]{background:rgba(251,249,244,.76)}
-summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding:20px 22px;user-select:none}summary::-webkit-details-marker{display:none}.summary-title{display:flex;align-items:baseline;gap:12px;min-width:0}.summary-title strong{font-size:clamp(23px,3vw,33px);font-weight:600;letter-spacing:-.025em}.summary-title span{font:800 9px/1.3 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}.group-count{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-summary:after{content:"+";font:400 26px/1 var(--serif);color:var(--muted);grid-column:2;grid-row:1}.group[open]>summary:after{content:"−"}.group>summary .group-count{margin-right:34px}
-.group-body{border-top:1px solid var(--rule);padding:4px 18px 14px}
-.archive-note{margin:10px 4px 4px;color:var(--muted);font-size:13px}
-.project-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;padding:14px 4px;border-bottom:1px solid var(--rule);align-items:center}.project-row:last-child{border-bottom:0}.project-row h3{margin:0;font-size:18px;font-weight:600;letter-spacing:-.01em}.project-row .repo-name{margin-top:2px;font-size:10px;color:var(--muted)}.project-row p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.45;max-width:700px}.row-links{display:flex;gap:12px;align-items:center}.row-links a{font:800 9px/1.2 var(--sans);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted)}.row-links a:first-child{color:var(--accent)}
-.project-row.lead-archive{padding-top:17px;padding-bottom:17px}.project-row.lead-archive h3{font-size:21px}.project-row.lead-archive .repo-name:after{content:" · first archived legal formulation";color:var(--accent)}
-.law-group .group-body{padding-top:2px}.law-group .project-row:not(.lead-archive){opacity:.72}.law-group .project-row:not(.lead-archive):hover{opacity:1}
-.project-row[hidden],details.group[hidden]{display:none}
-.empty{display:none;padding:42px 2px;color:var(--muted);font-size:19px;border-bottom:1px solid var(--rule)}
-
-footer{margin-top:38px;padding:22px 0 0;border-top:1px solid var(--rule);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:var(--muted);font:11px/1.5 var(--sans)}footer strong{color:var(--ink);font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-
-@media(max-width:780px){.hero{grid-template-columns:1fr}.hero-main{min-height:420px}.hero-side{border-left:0;border-top:1px solid var(--rule);display:grid;grid-template-columns:1fr auto;gap:24px}.hero-count{padding:0 0 0 22px;border-top:0;border-left:1px solid var(--rule)}.current{grid-template-columns:1fr;align-items:start}.current-links{justify-content:flex-start}.project-row{grid-template-columns:1fr}.row-links{justify-content:flex-start}}
-@media(max-width:560px){.wrap{width:min(100% - 24px,1040px);padding-top:12px}.hero-main{padding:32px 23px;min-height:390px}.hero-copy{font-size:19px}.hero-side{padding:23px;grid-template-columns:1fr}.hero-count{padding:18px 0 0;border-left:0;border-top:1px solid var(--rule)}.current{padding:24px 22px}.controls{position:static}.collection-head{grid-template-columns:1fr;gap:8px}summary{padding:18px 17px}.summary-title{display:block}.summary-title span{display:block;margin-top:4px}.group>summary .group-count{margin-right:26px}.group-body{padding-left:14px;padding-right:14px}}
-@media(prefers-color-scheme:dark){:root{--paper:#171614;--paper-deep:#201d19;--ink:#eee8df;--muted:#a79e93;--rule:#3a352f;--accent:#df7d6f;--accent-soft:#72443d;--white:#201e1b;--shadow:0 18px 45px rgba(0,0,0,.24)}body{background:radial-gradient(circle at 10% -10%,rgba(223,125,111,.08),transparent 34rem),var(--paper)}.hero{background:rgba(32,30,27,.72)}.hero-copy,.current p{color:#d0c8bd}.controls{background:rgba(23,22,20,.94)}.search{background:rgba(255,255,255,.04)}details.group{background:rgba(32,30,27,.42)}details.group[open]{background:rgba(32,30,27,.72)}}
-</style>
-</head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="description" content="TitanicParker Project Museum — two current galleries, supporting work, and a searchable preservation archive."><title>Project Museum · TitanicParker</title><style>
+:root{color-scheme:light dark;--paper:#efeae1;--panel:#fcfaf5;--panel-alt:#f5f0e7;--ink:#1c2529;--muted:#576469;--line:#d4cec3;--red:#9c423a;--blue:#234858;--gold:#ae8057;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--serif:Georgia,ui-serif,serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.57 var(--serif)}a{color:inherit;text-underline-offset:4px}a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--red);outline-offset:3px}.wrap{width:min(1160px,calc(100% - 40px));margin:auto}.skip{position:absolute;transform:translateY(-200%);background:var(--ink);color:var(--panel);padding:12px;z-index:99}.skip:focus{transform:none}.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:20px 0;border-bottom:1px solid var(--line)}.brand{font:800 13px var(--sans);letter-spacing:.18em;text-transform:uppercase;text-decoration:none}.toplinks{display:flex;gap:16px;flex-wrap:wrap;font:650 12px var(--sans)}.toplinks a{text-decoration:none}.toplinks a:hover{text-decoration:underline}
+.hero{padding:60px 0 42px;display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:30px;align-items:end}.eyebrow,.kicker{font:800 11px/1.3 var(--sans);color:var(--red);letter-spacing:.16em;text-transform:uppercase}.hero h1{font:400 clamp(64px,9.3vw,132px)/.83 var(--serif);letter-spacing:-.07em;margin:13px 0 26px}.hero-copy{font-size:clamp(19px,2.2vw,25px);line-height:1.42;max-width:750px;margin:0}.hero-aside{padding:19px 0 3px 23px;border-left:1px solid var(--line);font:13px/1.5 var(--sans);color:var(--muted)}.hero-aside strong{font:500 57px/1 var(--serif);color:var(--ink);display:block;margin:4px 0}.hero-aside span{font:800 10px var(--sans);text-transform:uppercase;letter-spacing:.15em}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;padding:24px 0 17px}.section-head h2{font:400 clamp(31px,4vw,49px)/1.05 var(--serif);letter-spacing:-.04em;margin:7px 0 0}.section-head p{font:14px var(--sans);max-width:420px;color:var(--muted);margin:0}
+.wings{display:grid;grid-template-columns:1fr 1fr;gap:18px}.wing{border:1px solid var(--line);background:var(--panel);padding:clamp(25px,3.3vw,42px);display:flex;flex-direction:column;min-height:620px;position:relative;overflow:hidden}.wing:before{content:"";position:absolute;right:-84px;top:-90px;width:245px;height:245px;border-radius:50%;border:1px solid currentColor;opacity:.12}.wing.case{border-top:7px solid var(--red)}.wing.idea{border-top:7px solid var(--blue)}.wing-number{color:var(--muted);font:800 12px var(--sans)}.wing h3{font:400 clamp(40px,4.1vw,65px)/1.01 var(--serif);letter-spacing:-.05em;margin:18px 0 16px}.wing>p{font-size:17px;color:var(--muted);margin:0 0 15px}.wing strong.question{display:block;font:500 21px/1.35 var(--serif);padding:15px 0 19px;border-bottom:1px solid var(--line)}.wing .route-title{font:800 10px var(--sans);color:var(--muted);letter-spacing:.17em;text-transform:uppercase;margin:23px 0 9px}.route-list{list-style:none;margin:0 0 25px;padding:0}.route-list li{border-bottom:1px solid var(--line)}.route-list a{display:flex;justify-content:space-between;gap:12px;padding:10px 2px;text-decoration:none;font:650 14px/1.4 var(--sans)}.route-list a:hover{text-decoration:underline}.route-list .num{color:var(--muted);font-size:11px;margin-right:8px}.wing .enter{margin-top:auto;align-self:flex-start;background:var(--ink);color:var(--panel);text-decoration:none;padding:14px 20px;font:800 12px var(--sans);letter-spacing:.04em}.wing.idea .enter{background:var(--blue)}.wing.case .enter{background:var(--red)}
+.trail{margin-top:22px;padding:22px 27px;border:1px solid var(--line);background:var(--panel-alt);display:flex;justify-content:space-between;gap:24px;align-items:center}.trail p{margin:0;max-width:760px;font-size:15px}.trail a{font:750 12px var(--sans);white-space:nowrap}
+.section-block{margin-top:66px}.intro{max-width:730px;color:var(--muted);font:15px/1.6 var(--sans);margin:0 0 20px}.shelves{display:grid;gap:10px}.shelf{background:var(--panel);border:1px solid var(--line)}.shelf summary{padding:21px 24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;font:600 clamp(20px,2.5vw,30px) var(--serif)}.shelf summary small{font:700 11px var(--sans);letter-spacing:.08em;color:var(--muted)}.shelf[open] summary{border-bottom:1px solid var(--line)}.shelf-items{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;padding:0 24px 15px}.exhibit{display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:20px 0;border-bottom:1px solid var(--line)}.exhibit h3{font:600 19px var(--serif);margin:0 0 4px}.exhibit p{font:13px/1.5 var(--sans);color:var(--muted);margin:0}.exhibit-links{display:flex;gap:18px}.exhibit-links a{font:750 11px var(--sans);color:var(--red)}
+.controls{border:1px solid var(--line);background:var(--panel);padding:12px 16px;margin:24px 0 10px}.search{width:100%;border:0;background:transparent;color:var(--ink);font:16px var(--sans);padding:9px}.collection-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:19px}.collection-head h2{font:400 clamp(33px,4vw,50px)/1.1 var(--serif);margin:5px 0}.status{color:var(--muted);font:11px var(--sans)}.groups{display:grid;gap:9px}details.group{background:var(--panel);border:1px solid var(--line)}details.group[open]{background:var(--panel)}details.group>summary{padding:22px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none}details.group>summary::-webkit-details-marker{display:none}.summary-title strong{font:500 28px var(--serif)}.summary-title span{display:block;color:var(--red);font:750 10px var(--sans);text-transform:uppercase;letter-spacing:.1em}.group-count{font:12px var(--sans);color:var(--muted)}.group-body{border-top:1px solid var(--line);padding:4px 22px 12px}.archive-note{color:var(--muted);font:13px/1.5 var(--sans)}.project-row{padding:17px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:25px}.project-row:last-child{border:0}.project-row h3{font:600 18px var(--serif);margin:0}.repo-name{color:var(--muted);font:11px var(--sans)}.project-row p{color:var(--muted);font:13px/1.45 var(--sans);margin:5px 0 0}.row-links{display:flex;gap:15px;align-items:center;flex-wrap:wrap;white-space:nowrap}.row-links a{font:750 11px var(--sans);color:var(--red)}.project-row[hidden],details.group[hidden]{display:none}.empty{display:none;color:var(--muted);padding:25px 0}.endnote{padding:30px 0 60px;margin-top:65px;border-top:1px solid var(--line);font:12px/1.6 var(--sans);color:var(--muted)}.endnote strong{color:var(--ink)}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.hero-aside{border-left:0;border-top:1px solid var(--line);padding:15px 0;display:flex;align-items:center;gap:18px}.hero-aside strong{font-size:34px}.wings{grid-template-columns:1fr}.wing{min-height:auto}.shelf-items{grid-template-columns:1fr}.trail{display:block}.trail a{display:inline-block;margin-top:12px}}
+@media(max-width:560px){.wrap{width:calc(100% - 26px)}.hero{padding:30px 0}.hero h1{font-size:clamp(57px,16vw,82px)}.topbar{align-items:flex-start;flex-direction:column}.toplinks{gap:12px}.wing{padding:24px}.wing h3{font-size:43px}.section-head,.collection-head{display:block}.section-head p{margin-top:12px}.project-row{display:block}.row-links{margin-top:11px}.shelf summary{padding:18px}.shelf-items{padding:0 18px 12px}}
+@media(prefers-color-scheme:dark){:root{--paper:#171b1c;--panel:#202729;--panel-alt:#1c2224;--ink:#f0e9df;--muted:#c0b9ad;--line:#414b4c;--red:#ef9e92;--blue:#9dc6d6;--gold:#d5aa7b}.wing.case .enter{color:#1a1717}.wing.idea .enter{color:#142329}}
+</style></head>
 <body>
-<a class="skip" href="#archive">Skip to archive</a>
+<a href="#main-galleries" class="skip">Skip to galleries</a>
 <div class="wrap">
-<header class="hero">
-  <div class="hero-main">
-    <div class="kicker">GitHub Pages · project archive</div>
-    <h1>Project<br>Museum</h1>
-    <p class="hero-copy">Begin with The Unanswered Referral and Fiche Ceathar: the current documentary case and the current intelligibility framework. Explore the work first; the wider repository archive remains available below.</p>
-  </div>
-  <aside class="hero-side" aria-label="Museum information">
-    <div>
-      <span class="label">Collection</span><strong>TitanicParker</strong>
-      <p style="margin-top:18px">The Museum is an index, not a ranking. Categories are collapsed to keep the current work legible while preserving the full public trail.</p>
-    </div>
-    <div class="hero-count"><b id="total">—</b><span>public exhibits</span></div>
-  </aside>
-</header>
-<section class="current spot-on" aria-labelledby="current-unanswered-referral-gallery">
-  <div>
-    <div class="kicker">Begin here · Current documentary case</div>
-    <h2 id="current-unanswered-referral-gallery">The Unanswered Referral</h2>
-    <p>The present case asks whether the relationship between painful feet and abnormal neurological movement was adequately investigated and followed up. Start with a balanced explanation, then examine the controlling case documents and source questions.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="case-gallery/">Enter Case Gallery</a>
-    <a class="source-link" href="https://github.com/TitanicParker/the-unanswered-referral/blob/main/THE_UNANSWERED_REFERRAL.md">Current overview</a>
-  </div>
-</section>
-<section class="current spot-on" aria-labelledby="current-fiche-gallery">
-  <div>
-    <div class="kicker">Current intelligibility framework · Fiche Ceathar</div>
-    <h2 id="current-fiche-gallery">The Intelligibility Gallery</h2>
-    <p>Recognise an intelligible achievement, explore the Operative Centre and the three governing questions, and enter The 54 through the current manual, interactive exercises and philosophical reading room.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="intelligibility-gallery/">Enter Intelligibility Gallery</a>
-    <a class="source-link" href="https://github.com/TitanicParker/fiche-ceathar">Fiche Ceathar source</a>
-  </div>
-</section>
-<section class="current" aria-labelledby="current-dialogue-archive-title">
-  <div>
-    <div class="kicker">Live working archive · Fiche Ceathar</div>
-    <h2 id="current-dialogue-archive-title">The 54 — Ordinary Dialogues</h2>
-    <p>A growing dialogue archive generated cell by cell. Read ordinary two-person exchanges, explore the 54 forms, and follow the working Markdown as new batches are committed.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/new-repository/#archive">Open archive</a>
-    <a class="source-link" href="https://github.com/TitanicParker/new-repository/blob/main/FICHE_CEATHAR_54_DIALOGUES_WORKING.md">Working file</a>
-  </div>
-</section>
-<section class="current" aria-labelledby="current-prima-facie-title">
-  <div>
-    <div class="kicker">Counsel case · primary evidence</div>
-    <h2 id="current-prima-facie-title">Prima Facie</h2>
-    <p>Legal reading room: the prima facie case, master manuscript, searchable clinical record and original handwritten interview.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/prima-facie/">Open case</a>
-    <a class="source-link" href="https://github.com/TitanicParker/prima-facie">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-how-to-do-it-title">
-  <div>
-    <div class="kicker">Learning completed intelligibility</div>
-    <h2 id="current-how-to-do-it-title">How to do it</h2>
-    <p>Learn to identify the Operative Centre of a completed intelligibility. Start with a ten-chapter workbook, practise with the full 200-sentence corpus, and explore the accompanying research white paper.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/how-to-do-it/">Open workbook &amp; research</a>
-    <a class="source-link" href="https://github.com/TitanicParker/how-to-do-it">Source</a>
-  </div>
-</section>
-
-
-<section class="current spot-on" id="prkn-diary-feature" aria-labelledby="prkn-diary-title">
-  <div>
-    <div class="kicker">Current work · PRKN observation diary</div>
-    <h2 id="prkn-diary-title">PRKN Treatment Diary</h2>
-    <p>Phone-first, timestamped medication and problem logging. Follow the investigation into procyclidine, dystonia, dyskinesia and walking function. Entries are saved locally in the browser; the investigation charter and dated research notes live in the source repository.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/health/">Open diary</a>
-    <a class="source-link" href="https://github.com/TitanicParker/health">Source &amp; notes</a>
-  </div>
-</section>
-
-
-<section class="current" aria-labelledby="current-unmoved-title">
-  <div>
-    <div class="kicker">New documentary reading room · clinical record and evidence</div>
-    <h2 id="current-unmoved-title">The Cause of the Effects</h2>
-    <p>An account of a painful-foot presentation and the authority of its 2017 clinical framework, presented together with a source-referenced primary-record evidence bundle.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/the-unmoved-mover/">Open reading room</a>
-    <a class="source-link" href="https://titanicparker.github.io/the-unmoved-mover/the_cause_of_the_effects.html">Account</a>
-    <a class="source-link" href="https://titanicparker.github.io/the-unmoved-mover/evidence.html">Evidence</a>
-    <a class="source-link" href="https://github.com/TitanicParker/the-unmoved-mover">Source</a>
-  </div>
-</section>
-
-<section class="current spot-on" id="everything-fresh-feature" aria-labelledby="current-everything-fresh-title">
-  <div>
-    <div class="kicker">Current research exhibition · sentence resolutions</div>
-    <h2 id="current-everything-fresh-title">Everything Fresh</h2>
-    <p>How does a sentence become one intelligible whole? Follow the Operative Centre method through The 54 and a growing 200-sentence corpus. Each completed sentence has a readable receipt showing its current solution and how the structure reveals itself, with the full diligence, competing cells and revision history available underneath.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/everything-fresh/">Enter exhibition</a>
-    <a class="source-link" href="https://titanicparker.github.io/everything-fresh/sentence-receipts.html">Sentence receipts</a>
-    <a class="source-link" href="https://titanicparker.github.io/everything-fresh/RESOLUTION_REGISTER.html">Current register</a>
-    <a class="source-link" href="https://github.com/TitanicParker/everything-fresh">Source &amp; diligence</a>
-  </div>
-</section>
-
-<section class="current spot-on" aria-labelledby="current-54-title">
-  <div>
-    <div class="kicker">New interactive exhibit · completed intelligibility</div>
-    <h2 id="current-54-title">The 54</h2>
-    <p>Fifteen definitions. Fifty-four forms. An interactive three-reel machine to explore transformation, completion topology, and persistence, with canonical short utterances and questions for every cell.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/fiche-ceathar/">Enter The 54</a>
-    <a class="source-link" href="https://github.com/TitanicParker/fiche-ceathar">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-pssssst-title">
-  <div><div class="kicker">New draft · listening book</div><h2 id="current-pssssst-title">The Three Pages and the Nine-Year Record</h2>
-    <p>The new long-form draft behind <em>pssssst</em>: a plain-language account of what three handwritten clinical pages came to mean across the following nine years. Read or listen, with the CLIN references kept in the manuscript. This is a working draft, not a final clinical finding.</p>
-  </div>
-  <div class="current-links"><a class="primary-link" href="https://titanicparker.github.io/pssssst/">Open draft</a><a class="source-link" href="https://github.com/TitanicParker/pssssst">Source</a></div>
-</section>
-
-<section class="current" aria-labelledby="current-an-leabhar-title">
-  <div>
-    <div class="kicker">Newest manuscript reading room</div>
-    <h2 id="current-an-leabhar-title">An Leabhar</h2>
-    <p>The newest long-form manuscript project: a dedicated reading edition for the evolving book, beginning with <em>The Feet</em> and the lived history that later became a medical record.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/an-leabhar/">Open book</a>
-    <a class="source-link" href="https://github.com/TitanicParker/an-leabhar">Source</a>
-  </div>
-</section>
-
-
-
-<section class="current" aria-labelledby="current-legal-title">
-  <div>
-    <div class="kicker">Current legal repository</div>
-    <h2 id="current-legal-title">Legal</h2>
-    <p>The current controlling medico-legal working repository. This is the legal project kept visibly at the front of the Museum; earlier legal formulations remain preserved below as an intentionally quiet archive.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/legal/">Open project</a>
-    <a class="source-link" href="https://github.com/TitanicParker/legal">Source</a>
-  </div>
-</section>
-
-<section class="current spot-on" aria-labelledby="current-spot-on-title">
-  <div>
-    <div class="kicker">Current case reading room</div>
-    <h2 id="current-spot-on-title">Spot On</h2>
-    <p>A focused public reading room for the present case architecture: the 100 Arguments visual deck alongside <em>The Unresolved Relationship</em> ethics narrative, centred on the Protest and the eye of the storm.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/spot-on/">Open reading room</a>
-    <a class="source-link" href="https://github.com/TitanicParker/spot-on">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-making-sense-together-title">
-  <div>
-    <div class="kicker">Current shared-reality book</div>
-    <h2 id="current-making-sense-together-title">Making Sense Together</h2>
-    <p>A live reading room for the new spiral manuscript on understanding, communication and shared reality. The museum page is wired to the evolving <code>making-sense--together</code> repository.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/making-sense-together/">Open book</a>
-    <a class="source-link" href="https://titanicparker.github.io/making-sense-together/essays.html">Essays</a>
-    <a class="source-link" href="https://titanicparker.github.io/making-sense-together/fresh.html">Fresh</a>
-    <a class="source-link" href="https://github.com/TitanicParker/making-sense--together">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-scathing-protest-title">
-  <div>
-    <div class="kicker">Patient-commissioned documentary reading room</div>
-    <h2 id="current-scathing-protest-title">Scathing Protest</h2>
-    <p>A document-led examination of the July 2017 Protest and its clinical and institutional aftermath. The reading room publishes the evolving <code>Document.md</code> directly from its source repository.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/scathing-protest/">Open reading room</a>
-    <a class="source-link" href="https://github.com/TitanicParker/scathing-protest">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-biography-title">
-  <div>
-    <div class="kicker">Current medical literary essay</div>
-    <h2 id="current-biography-title">The Biography of Safety</h2>
-    <p>Seven movements through a patient's medical record, the changing authority of clinical documentation and the search for an independent safety account. Read the evolving source HTML in the museum's listening-enabled reading room; the documentary appendix is preserved.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/the-biography-of-safety/">Open essay</a>
-    <a class="source-link" href="https://github.com/TitanicParker/the-biography-of-safety">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-mayas-bike-title">
-  <div>
-    <div class="kicker">Current intelligibility book</div>
-    <h2 id="current-mayas-bike-title">Maya's Bike</h2>
-    <p>A live reading room for the garden-shed book on completed intelligibility. The public page reads directly from the evolving Markdown manuscript in the <code>mayas-bike</code> repository.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/mayas-bike/">Open book</a>
-    <a class="source-link" href="https://github.com/TitanicParker/mayas-bike">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-liams-case-title">
-  <div>
-    <div class="kicker">Sequel reading room</div>
-    <h2 id="current-liams-case-title">Liam's Case</h2>
-    <p>The sequel to <em>Maya's Bike</em>: a document-led reading room where the same concern with what becomes settled, inherited and left unresolved moves from the shed into a medical case record.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/liams-case/">Open sequel</a>
-    <a class="source-link" href="https://github.com/TitanicParker/Liams-case">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-neuropathy-question-title">
-  <div>
-    <div class="kicker">Current manuscript reading room</div>
-    <h2 id="current-neuropathy-question-title">The Neuropathy Question</h2>
-    <p>A manuscript-ready reading and listening room for the neuropathy inquiry. The publication is wired directly to the evolving <code>manuscript.md</code> in the source repository.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/the-neuropathy-question/">Open reading room</a>
-    <a class="source-link" href="https://github.com/TitanicParker/the-neuropathy-question">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-eye-argument-title">
-  <div>
-    <div class="kicker">Current manuscript reading room</div>
-    <h2 id="current-eye-argument-title">The Eye of the Argument</h2>
-    <p>The live reading room for <em>What Happened to the Feet</em>, wired directly to the evolving <code>manuscript.md</code> in the source repository.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/the-eye-of-the-argument/">Open reading room</a>
-    <a class="source-link" href="https://github.com/TitanicParker/the-eye-of-the-argument">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-crypto-title">
-  <div>
-    <div class="kicker">Current market-structure research</div>
-    <h2 id="current-crypto-title">Fixed Structure Research</h2>
-    <p>A living illustrated field guide to a fixed logarithmic market structure: one branch tests adjacent-level trading rules; the other studies TOTAL, market expansion and contraction, and the 100-period SMA. Both feed into a shared evidence notebook of charts, measurements, failures and unresolved cases.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/crypto/">Open field guide</a>
-    <a class="source-link" href="https://github.com/TitanicParker/crypto">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-sequence-title">
-  <div>
-    <div class="kicker">Current systems exhibit</div>
-    <h2 id="current-sequence-title">Sequence</h2>
-    <p>A systems view of compression, evidential reassignment, path dependence and the later PRKN/dystonia resolution across the longitudinal record.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/sequence/">Open exhibit</a>
-    <a class="source-link" href="https://github.com/TitanicParker/sequence">Source</a>
-  </div>
-</section>
-
-<section class="current" aria-labelledby="current-case-readable-title">
-  <div>
-    <div class="kicker">Current lossless case reader</div>
-    <h2 id="current-case-readable-title">Case Readable</h2>
-    <p>The full Case Formulation reading edition in a lossless public reader. The page is wired to the preserved source repository so the evidential architecture, wording, anchors, navigation and original HTML remain intact rather than being re-summarised for publication.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/case-readable/">Open case reader</a>
-    <a class="source-link" href="https://github.com/TitanicParker/case-readable">Source</a>
-  </div>
-</section>
-
-
-
-<section class="current" aria-labelledby="current-resolve-title">
-  <div>
-    <div class="kicker">Current Project 54 corpus and reading library</div>
-    <h2 id="current-resolve-title">Resolve</h2>
-    <p>Combined Project 54 corpus and interactive reading library: 27 numbered fairy tales, 1,883 fairy-tale sentences, and 615 mathematical traversals. The complete source is preserved as a Markdown file, with a separate browser reader.</p>
-  </div>
-  <div class="current-links">
-    <a class="primary-link" href="https://titanicparker.github.io/resolve/">Open library</a>
-    <a class="source-link" href="https://github.com/TitanicParker/resolve/blob/main/Project_54_Combined_Corpus_1_Onward.md">Corpus</a>
-    <a class="source-link" href="https://github.com/TitanicParker/resolve">Source</a>
-  </div>
-</section>
-
-<div class="controls" aria-label="Museum search">
-  <input id="search" class="search" type="search" placeholder="Search the folded archive…" aria-label="Search archived projects">
+<nav class="topbar" aria-label="Museum navigation"><a class="brand" href="./">TitanicParker · Museum</a><div class="toplinks"><a href="#main-galleries">The two galleries</a><a href="#supporting">Reading rooms & projects</a><a href="#archive">Complete archive</a></div></nav>
+<header class="hero"><div><div class="eyebrow">Two present-day bodies of work · One preserved collection</div><h1>Project<br>Museum.</h1><p class="hero-copy">Start with the work as it stands today. Explore the documentary case and the intelligibility framework through clear reading routes. The other projects remain available underneath—not mixed into the opening.</p></div><aside class="hero-aside"><div><span>Collection</span><strong id="total">—</strong><span>Indexed exhibits</span></div><p>The museum is a guide, not a substitute for the source works. All earlier public projects remain listed in the searchable archive.</p></aside></header>
+<main>
+<section id="main-galleries" aria-labelledby="galleries-title">
+<div class="section-head"><div><div class="eyebrow">Begin here</div><h2 id="galleries-title">Two principal exhibitions.</h2></div><p>Choose a question to explore. Each gallery gives you an ordered route into its controlling contemporary work.</p></div>
+<div class="wings">
+<article class="wing case" aria-labelledby="case-title">
+<div class="wing-number">01 / THE DOCUMENTARY CASE</div>
+<h3 id="case-title">The Unanswered Referral</h3>
+<p>In 2017, painful abnormal feet, clawed toes and changing movement were referred together. Parkinsonism was investigated and treated. The question is whether the relationship between those findings was adequately examined and followed up.</p>
+<strong class="question">What was investigated—and who held responsibility for what remained uncertain?</strong>
+<div class="route-title">Choose where to enter</div><ol class="route-list"><li><a href="https://github.com/TitanicParker/the-unanswered-referral/blob/main/THE_UNANSWERED_REFERRAL.md"><span><span class="num">01</span>Case overview</span><span aria-hidden="true">↗</span></a></li><li><a href="https://github.com/TitanicParker/prima-facie/blob/main/MASTER_CASE_FOR_COUNSEL.md"><span><span class="num">02</span>Counsel case</span><span aria-hidden="true">↗</span></a></li><li><a href="https://github.com/TitanicParker/the-unanswered-referral/blob/main/THE_POSITIVE_FINDING_AND_THE_PERIPHERAL_HYPOTHESIS.md"><span><span class="num">03</span>Clinical questions</span><span aria-hidden="true">↗</span></a></li><li><a href="https://github.com/TitanicParker/the-unanswered-referral/blob/main/DOCUMENTARY_SOURCE_INDEX.md"><span><span class="num">04</span>Source index</span><span aria-hidden="true">↗</span></a></li></ol>
+<a class="enter" href="case-gallery/">Enter the Case Gallery →</a>
+</article>
+<article class="wing idea" aria-labelledby="intelligibility-title">
+<div class="wing-number">02 / THE INTELLIGIBILITY FRAMEWORK</div>
+<h3 id="intelligibility-title">Fiche Ceathar<br>The 54</h3>
+<p>What does an expression, demonstration or action make intelligibly achieved? Begin with the Operative Centre and three governing questions, then explore the proposed grammar of fifty-four unified forms.</p>
+<strong class="question">What changed? What made that sufficient? How does the achievement remain available?</strong>
+<div class="route-title">Choose where to enter</div><ol class="route-list"><li><a href="https://titanicparker.github.io/fiche-ceathar/what_must_already_be_recognised.html"><span><span class="num">01</span>Recognise the Centre</span><span aria-hidden="true">↗</span></a></li><li><a href="https://github.com/TitanicParker/fiche-ceathar/blob/main/The_54_Manual_of_Completed_Intelligibility.md"><span><span class="num">02</span>The 54 manual</span><span aria-hidden="true">↗</span></a></li><li><a href="https://titanicparker.github.io/fiche-ceathar/sentence-craft.html"><span><span class="num">03</span>Practise with sentences</span><span aria-hidden="true">↗</span></a></li><li><a href="https://github.com/TitanicParker/fiche-ceathar/blob/main/protocols/PERSISTENCE_COORDINATOR_SOURCE.md"><span><span class="num">04</span>Research methods</span><span aria-hidden="true">↗</span></a></li><li><a href="https://titanicparker.github.io/fiche-ceathar/socratia.html"><span><span class="num">05</span>Philosophy and reading</span><span aria-hidden="true">↗</span></a></li></ol>
+<a class="enter" href="intelligibility-gallery/">Enter the Intelligibility Gallery →</a>
+</article>
 </div>
-
-<main id="archive">
-<section aria-labelledby="archive-title">
-  <div class="collection-head">
-    <div><div class="kicker">The archive</div><h2 id="archive-title">Browse by category.</h2></div>
-    <span id="status" class="status" aria-live="polite">Categories closed by default</span>
-  </div>
-  <div id="groups" class="groups"></div>
-  <div id="empty" class="empty">No matching archived exhibits.</div>
+<div class="trail"><p><strong>Preservation principle.</strong> The original case and research repositories remain the controlling sources. This museum provides orientation, source links and distinct reading routes. It does not rewrite their findings or revive abandoned formulations.</p><a href="#supporting">Explore the rest of the work ↓</a></div>
 </section>
-</main>
-
-<footer><strong>TitanicParker Project Museum</strong><span>The Three Pages and the Nine-Year Record, An Leabhar, current legal work, Spot On, Making Sense Together, Maya's Bike, The Biography of Safety, Liam's Case, The Neuropathy Question, The Eye of the Argument, Fixed Structure Research, Sequence and Case Readable are foregrounded. Historical repositories remain available but visually subordinate.</span></footer>
+<section class="section-block" id="supporting" aria-labelledby="supporting-title"><div class="section-head"><div><div class="eyebrow">Beyond the main entrances</div><h2 id="supporting-title">Reading rooms and active projects.</h2></div><p>Books, working tools, connected case writings and experiments are grouped by subject instead of occupying a long row of homepage banners.</p></div><p class="intro">Open a shelf to browse. These are preserved public links; they are not rival canonical starting points. Clinical and correspondence materials should be reviewed for publication suitability before being specially featured.</p><div class="shelves"><details class="shelf"><summary><span>Case writing &amp; research</span><small>13 exhibits <span aria-hidden="true">＋</span></small></summary><div class="shelf-items"><article class="exhibit"><div><h3>Prima Facie</h3><p>Legal reading room: the prima facie case, master manuscript, searchable clinical record and original handwritten interview.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/prima-facie/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/prima-facie">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>PRKN Treatment Diary</h3><p>Phone-first, timestamped medication and problem logging. Follow the investigation into procyclidine, dystonia, dyskinesia and walking function. Entries are saved locally in the browser; the investigation charter and dated research notes live in the source repository.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/health/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/health">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>The Cause of the Effects</h3><p>An account of a painful-foot presentation and the authority of its 2017 clinical framework, presented together with a source-referenced primary-record evidence bundle.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/the-unmoved-mover/">Visit <span aria-hidden="true">↗</span></a><a href="https://titanicparker.github.io/the-unmoved-mover/the_cause_of_the_effects.html">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>The Three Pages and the Nine-Year Record</h3><p>The new long-form draft behind pssssst: a plain-language account of what three handwritten clinical pages came to mean across the following nine years. Read or listen, with the CLIN references kept in the manuscript. This is a working draft, not a final clinical finding.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/pssssst/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/pssssst">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Legal</h3><p>The current controlling medico-legal working repository. This is the legal project kept visibly at the front of the Museum; earlier legal formulations remain preserved below as an intentionally quiet archive.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/legal/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/legal">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Spot On</h3><p>A focused public reading room for the present case architecture: the 100 Arguments visual deck alongside The Unresolved Relationship ethics narrative, centred on the Protest and the eye of the storm.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/spot-on/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/spot-on">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Scathing Protest</h3><p>A document-led examination of the July 2017 Protest and its clinical and institutional aftermath. The reading room publishes the evolving Document.md directly from its source repository.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/scathing-protest/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/scathing-protest">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>The Biography of Safety</h3><p>Seven movements through a patient's medical record, the changing authority of clinical documentation and the search for an independent safety account. Read the evolving source HTML in the museum's listening-enabled reading room; the documentary appendix is preserved.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/the-biography-of-safety/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/the-biography-of-safety">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Liam's Case</h3><p>The sequel to Maya's Bike: a document-led reading room where the same concern with what becomes settled, inherited and left unresolved moves from the shed into a medical case record.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/liams-case/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/Liams-case">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>The Neuropathy Question</h3><p>A manuscript-ready reading and listening room for the neuropathy inquiry. The publication is wired directly to the evolving manuscript.md in the source repository.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/the-neuropathy-question/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/the-neuropathy-question">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>The Eye of the Argument</h3><p>The live reading room for What Happened to the Feet, wired directly to the evolving manuscript.md in the source repository.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/the-eye-of-the-argument/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/the-eye-of-the-argument">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Sequence</h3><p>A systems view of compression, evidential reassignment, path dependence and the later PRKN/dystonia resolution across the longitudinal record.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/sequence/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/sequence">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Case Readable</h3><p>The full Case Formulation reading edition in a lossless public reader. The page is wired to the preserved source repository so the evidential architecture, wording, anchors, navigation and original HTML remain intact rather than being re-summarised for publication.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/case-readable/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/case-readable">Reference <span aria-hidden="true">↗</span></a></div></article></div></details>
+<details class="shelf"><summary><span>Intelligibility, books &amp; demonstrations</span><small>7 exhibits <span aria-hidden="true">＋</span></small></summary><div class="shelf-items"><article class="exhibit"><div><h3>The 54 — Ordinary Dialogues</h3><p>A growing dialogue archive generated cell by cell. Read ordinary two-person exchanges, explore the 54 forms, and follow the working Markdown as new batches are committed.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/new-repository/#archive">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/new-repository/blob/main/FICHE_CEATHAR_54_DIALOGUES_WORKING.md">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>How to do it</h3><p>Learn to identify the Operative Centre of a completed intelligibility. Start with a ten-chapter workbook, practise with the full 200-sentence corpus, and explore the accompanying research white paper.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/how-to-do-it/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/how-to-do-it">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Everything Fresh</h3><p>How does a sentence become one intelligible whole? Follow the Operative Centre method through The 54 and a growing 200-sentence corpus. Each completed sentence has a readable receipt showing its current solution and how the structure reveals itself, with the full diligence, competing cells and revision history available underneath.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/everything-fresh/">Visit <span aria-hidden="true">↗</span></a><a href="https://titanicparker.github.io/everything-fresh/sentence-receipts.html">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>The 54</h3><p>Fifteen definitions. Fifty-four forms. An interactive three-reel machine to explore transformation, completion topology, and persistence, with canonical short utterances and questions for every cell.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/fiche-ceathar/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/fiche-ceathar">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Making Sense Together</h3><p>A live reading room for the new spiral manuscript on understanding, communication and shared reality. The museum page is wired to the evolving making-sense--together repository.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/making-sense-together/">Visit <span aria-hidden="true">↗</span></a><a href="https://titanicparker.github.io/making-sense-together/essays.html">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Maya's Bike</h3><p>A live reading room for the garden-shed book on completed intelligibility. The public page reads directly from the evolving Markdown manuscript in the mayas-bike repository.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/mayas-bike/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/mayas-bike">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Resolve</h3><p>Combined Project 54 corpus and interactive reading library: 27 numbered fairy tales, 1,883 fairy-tale sentences, and 615 mathematical traversals. The complete source is preserved as a Markdown file, with a separate browser reader.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/resolve/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/resolve/blob/main/Project_54_Combined_Corpus_1_Onward.md">Reference <span aria-hidden="true">↗</span></a></div></article></div></details>
+<details class="shelf"><summary><span>Other current projects</span><small>2 exhibits <span aria-hidden="true">＋</span></small></summary><div class="shelf-items"><article class="exhibit"><div><h3>An Leabhar</h3><p>The newest long-form manuscript project: a dedicated reading edition for the evolving book, beginning with The Feet and the lived history that later became a medical record.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/an-leabhar/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/an-leabhar">Reference <span aria-hidden="true">↗</span></a></div></article><article class="exhibit"><div><h3>Fixed Structure Research</h3><p>A living illustrated field guide to a fixed logarithmic market structure: one branch tests adjacent-level trading rules; the other studies TOTAL, market expansion and contraction, and the 100-period SMA. Both feed into a shared evidence notebook of charts, measurements, failures and unresolved cases.</p></div><div class="exhibit-links"><a href="https://titanicparker.github.io/crypto/">Visit <span aria-hidden="true">↗</span></a><a href="https://github.com/TitanicParker/crypto">Reference <span aria-hidden="true">↗</span></a></div></article></div></details></div></section>
+<section class="section-block" id="archive" aria-labelledby="archive-title">
+<div class="section-head"><div><div class="eyebrow">Full public trail</div><h2 id="archive-title">The repository archive.</h2></div><p>All indexed historical and exploratory projects remain findable by topic, title or repository name.</p></div>
+<div class="controls"><label for="search" class="eyebrow">Find an archived project</label><input id="search" class="search" type="search" placeholder="Search projects, topics, repository names…" aria-label="Search archived projects"></div>
+<div class="collection-head"><span class="status" id="status" aria-live="polite">Categories closed by default</span></div>
+<div id="groups" class="groups"></div><div id="empty" class="empty">No matching archived projects.</div>
+</section></main>
+<footer class="endnote"><strong>TitanicParker Project Museum</strong> · Two current galleries, subject-grouped supporting work, and the complete historical index. This site is a navigation layer over source repositories, not an independent clinical finding or empirical verification of the 54.</footer>
 </div>
-
 <script>
 const P=[
 ['Stronger Formulation','stronger-formulation','law tools'],
@@ -511,7 +165,7 @@ const law=archived.filter(p=>p.category==='law').sort((a,b)=>{
 const byCategory={law};
 for(const c of categoryOrder.slice(1)) byCategory[c]=archived.filter(p=>p.category===c).sort((a,b)=>a.order-b.order);
 
-document.querySelector('#total').textContent=archived.length+document.querySelectorAll('section.current').length;
+document.querySelector('#total').textContent=archived.length+24;
 const groups=document.querySelector('#groups');
 const projectRows=[];
 const groupEls=[];
@@ -553,90 +207,4 @@ q.addEventListener('input',()=>{
   status.textContent=x?`${totalVisible} matching archived projects`:'Categories closed by default';
 });
 </script>
-
-<style>
-/* Compact museum: latest ten and subject shelves begin collapsed. */
-section.current,.controls,#archive{display:none!important}
-.hero-main{min-height:190px;padding:28px}.hero-main h1{font-size:clamp(46px,7vw,80px);margin:12px 0}.hero-side{padding:20px}
-.compact-directory{margin:22px 0 30px}.compact-directory h2{font-size:clamp(26px,4vw,38px);margin:0 0 8px;font-weight:500}
-.compact-directory>p{color:var(--muted);font:14px/1.6 var(--sans)}
-.compact-directory details{border:1px solid var(--rule);margin:9px 0;background:var(--white)}
-.compact-directory summary{cursor:pointer;display:flex;justify-content:space-between;gap:12px;padding:17px 20px;font-family:var(--sans)}
-.compact-directory summary strong{font-size:15px}.compact-directory summary span{font-size:12px;color:var(--muted)}
-.compact-directory summary:focus-visible,.compact-directory a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-.compact-directory .entries{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--rule)}
-.compact-directory article{padding:13px 18px;border-bottom:1px solid var(--rule);min-width:0}
-.compact-directory article:nth-child(odd){border-right:1px solid var(--rule)}
-.compact-directory h3{font:600 16px/1.3 var(--serif);margin:0 0 4px}
-.compact-directory article p{font:12px/1.45 var(--sans);margin:0 0 8px;color:var(--muted)}
-.compact-directory .links{display:flex;flex-wrap:wrap;gap:12px;font:700 11px/1.5 var(--sans)}
-@media(max-width:650px){.hero-side{display:none}.hero{display:block}.compact-directory .entries{grid-template-columns:1fr}.compact-directory article:nth-child(odd){border-right:0}}
-</style>
-<script>
-(()=>{
-const newest=['prima-facie','percipient','the-unforgiving-minute','how-to-do-it','everything-fresh','health','the-unmoved-mover','fiche-ceathar','the-biography-of-safety','scathing-protest','pssssst','an-leabhar','new-repository','collab','resolve'];
-const additional=[
-['Ms-Tansey — Documentary Case','Ms-Tansey','law','Indexed documentary records from 2017–2026: 40 source documents, counsel orientation, 56 questions, manuscript images, and supplementary statement.'],
-['Structuracy — Sentence Game','percipient','language','Play two sentence games: notice what one sentence does, or spot exactly what changes between two. Loadable sentence cartridges and an everyday-language interface.'],
-    ['The Unforgiving Minute — The Freedom to Love','the-unforgiving-minute','essays','Two connected reflections: the first question of self-awareness and the second question of compassion, with everyday examples'],
-['Collab — Portable Structuracy','collab','language','Sentence-to-structure experiment, firewalls and future flip-card atlas'],
-['Project Museum','TitanicParker.github.io','tools','The central museum and project directory'],
-['The Moving Invariant','the-moving-invariant','language','Language and invariant structure'],
-['Perpetual Essays','perpetual-essays','essays','Essays and developing research'],
-['Why GPT','why-gpt','language','Writing and research about GPT'],
-['Nucleus','Nucleus','law','Evidential and ethical research'],
-['Spot On','spot-on','law','Documentary analysis and argument'],
-['Imprecise Précis','imprecise-precis','essays','An essay and reading room'],
-['The 54 — Dialogue Archive','new-repository','language','A living collection of ordinary two-person dialogues across the 54 forms, published from a working Markdown corpus.'],
-['Fiche Ceathar','fiche-ceathar','language','The 54 atlas and research protocols'],
-['Health','health','law','Health diary and writing'],
-['Everything Fresh','everything-fresh','language','Operative Centre research and laboratory']];
-const cats=['language','law','essays','geometry','tools'];
-const labels={language:'Language & Meaning',law:'Law & Governance',essays:'Books & Essays',geometry:'Geometry & Systems',tools:'Tools & Experiments'};
-const special={'prima-facie':'law','how-to-do-it':'language','the-unmoved-mover':'law','pssssst':'law','an-leabhar':'essays','legal':'law','making-sense--together':'language','scathing-protest':'law','the-biography-of-safety':'law','mayas-bike':'language','Liams-case':'law','the-neuropathy-question':'law','the-eye-of-the-argument':'law','crypto':'tools','sequence':'law','case-readable':'law','resolve':'language','collab':'language'};
-const records=new Map();
-P.forEach(p=>{const category=cats.find(c=>p[2].split(' ').includes(c))||'tools';records.set(p[1],{title:p[0],repo:p[1],category,description:descriptions[p[1]]||'',open:'https://titanicparker.github.io/'+p[1]+'/'});});
-document.querySelectorAll('section.current').forEach(el=>{
-const source=[...el.querySelectorAll('a')].find(a=>a.href.startsWith('https://github.com/TitanicParker/')&&!a.href.includes('/blob/'));if(!source)return;
-const name=source.href.split('github.com/TitanicParker/')[1].split('/')[0];
-const live=[...el.querySelectorAll('a')].find(a=>a.href.startsWith('https://titanicparker.github.io/'));
-records.set(name,{title:el.querySelector('h2')?.textContent.trim()||name,repo:name,category:special[name]||'tools',description:el.querySelector('p')?.textContent.trim()||'',open:live?.href||source.href});
-});
-additional.forEach(p=>{if(!records.has(p[1]))records.set(p[1],{title:p[0],repo:p[1],category:p[2],description:p[3],open:'https://titanicparker.github.io/'+p[1]+'/'});});
-const root=document.createElement('main');root.className='compact-directory';root.id='compact-directory';
-const header=document.createElement('h2');header.textContent='Explore the collection';const lead=document.createElement('p');lead.textContent='Featured recent projects first, then the entire collection by subject. Sections begin closed; open just the shelf you need.';root.append(header,lead);
-function shelf(label,arr){
-const details=document.createElement('details'),summary=document.createElement('summary'),name=document.createElement('strong'),count=document.createElement('span'),grid=document.createElement('div');grid.className='entries';name.textContent=label;count.textContent=arr.length+' projects';summary.append(name,count);details.append(summary);
-arr.forEach(p=>{const article=document.createElement('article'),h=document.createElement('h3'),d=document.createElement('p'),links=document.createElement('div'),open=document.createElement('a'),source=document.createElement('a');links.className='links';h.textContent=p.title;d.textContent=p.description||'Project archive';open.href=p.open;open.textContent='Open';source.href='https://github.com/TitanicParker/'+p.repo;source.textContent='Source';links.append(open,source);article.append(h,d,links);grid.append(article);});details.append(grid);root.append(details);
-}
-shelf('Recent repositories — newly added',newest.map(n=>records.get(n)).filter(Boolean));
-const selected=new Set(newest);cats.forEach(c=>shelf(labels[c],[...records.values()].filter(p=>!selected.has(p.repo)&&p.category===c).sort((a,b)=>a.title.localeCompare(b.title))));
-document.querySelector('section.current').before(root);
-const counter=document.querySelector('#total');if(counter)counter.textContent=records.size;
-})();
-</script>
-
-<style>
-/* Counsel-facing featured exhibition, visible above the collapsible museum shelves. */
-#unanswered-referral-feature{margin:22px 0 26px;padding:32px 34px;border:1px solid var(--accent);background:linear-gradient(120deg,var(--white),var(--paper-deep));box-shadow:var(--shadow);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:end}
-#unanswered-referral-feature h2{font:600 clamp(34px,5vw,56px)/1 var(--serif);letter-spacing:-.04em;margin:9px 0 13px}
-#unanswered-referral-feature p{margin:0;max-width:660px;color:var(--muted);font-size:16px}
-#unanswered-referral-feature .links{display:flex;flex-wrap:wrap;gap:11px;align-items:center}
-#unanswered-referral-feature .links a{text-decoration:none;font:800 11px var(--sans);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
-#unanswered-referral-feature .visit{background:var(--accent);color:var(--white);padding:13px 16px}
-#unanswered-referral-feature .source{padding:12px 14px;border:1px solid var(--rule)}
-@media(max-width:780px){#unanswered-referral-feature{grid-template-columns:1fr;padding:25px}}
-</style>
-<script>
-(()=>{
-  const directory=document.querySelector('#compact-directory');
-  if(!directory||document.getElementById('unanswered-referral-feature'))return;
-  const section=document.createElement('section');
-  section.id='unanswered-referral-feature';
-  section.setAttribute('aria-labelledby','unanswered-referral-title');
-  section.innerHTML='<div><div class="kicker">Featured · Orientation for independent counsel</div><h2 id="unanswered-referral-title">The Unanswered Referral</h2><p>A standalone, source-referenced essay tracing the 2017 painful-foot referral, specialist clinical account and the hospital’s nine-year defence. Begin with the central question, then examine the documentary record.</p></div><div class="links"><a class="visit" href="https://titanicparker.github.io/the-unanswered-referral/">Read the essay</a><a class="source" href="https://github.com/TitanicParker/the-unanswered-referral">Repository</a></div>';
-  directory.before(section);
-})();
-</script>
-</body>
-</html>
+</body></html>
